@@ -1,0 +1,2922 @@
+{
+  "probe_version": 1,
+  "probe_label": "stock",
+  "endpoint": "http://localhost:4566",
+  "account": "000000000000",
+  "identity": {
+    "arn": "arn:aws:iam::000000000000:root",
+    "user_id": "000000000000"
+  },
+  "probe_credential_akid": "CLOUDSECPROBEKEY000001",
+  "floci": {
+    "version": "2.1.0",
+    "edition": "community",
+    "services": {
+      "ssm": "running",
+      "sqs": "running",
+      "s3": "running",
+      "dynamodb": "running",
+      "sns": "running",
+      "lambda": "running",
+      "apigateway": "running",
+      "iam": "running",
+      "kafka": "running",
+      "mq": "running",
+      "elasticache": "running",
+      "memorydb": "running",
+      "rds": "running",
+      "rds-data": "running",
+      "neptune": "running",
+      "docdb": "running",
+      "redshift": "running",
+      "redshift-data": "running",
+      "events": "running",
+      "servicediscovery": "running",
+      "elasticmapreduce": "running",
+      "emr-serverless": "running",
+      "wafv2": "running",
+      "scheduler": "running",
+      "logs": "running",
+      "monitoring": "running",
+      "secretsmanager": "running",
+      "apigatewayv2": "running",
+      "kinesis": "running",
+      "kinesisanalytics": "running",
+      "kms": "running",
+      "cognito-idp": "running",
+      "states": "running",
+      "swf": "running",
+      "cloudformation": "running",
+      "acm": "running",
+      "athena": "running",
+      "glue": "running",
+      "firehose": "running",
+      "email": "running",
+      "es": "running",
+      "ec2": "running",
+      "ecs": "running",
+      "appconfig": "running",
+      "appconfigdata": "running",
+      "ecr": "running",
+      "tagging": "running",
+      "bedrock": "running",
+      "bedrock-runtime": "running",
+      "eks": "running",
+      "mwaa": "running",
+      "pipes": "running",
+      "bedrock-agentcore-control": "running",
+      "bedrock-agentcore": "running",
+      "elasticloadbalancing": "running",
+      "elb": "running",
+      "codebuild": "running",
+      "batch": "running",
+      "codedeploy": "running",
+      "codepipeline": "running",
+      "servicequotas": "running",
+      "ram": "running",
+      "config": "running",
+      "cloudtrail": "running",
+      "lightsail": "running",
+      "cloudcontrol": "running",
+      "sso": "running",
+      "sso-oidc": "running",
+      "macie2": "running",
+      "account": "running",
+      "access-analyzer": "running",
+      "identitystore": "running",
+      "budgets": "running",
+      "detective": "running",
+      "inspector2": "running",
+      "securityhub": "running",
+      "autoscaling": "running",
+      "application-autoscaling": "running",
+      "elasticbeanstalk": "running",
+      "backup": "running",
+      "resource-explorer-2": "running",
+      "fis": "running",
+      "transfer": "running",
+      "route53": "running",
+      "textract": "running",
+      "comprehend": "running",
+      "rekognition": "running",
+      "pricing": "running",
+      "transcribe": "running",
+      "translate": "running",
+      "ce": "running",
+      "cur": "running",
+      "bcm-pricing-calculator": "running",
+      "bcm-data-exports": "running",
+      "oam": "running",
+      "cloudfront": "running",
+      "appsync": "running",
+      "s3vectors": "running",
+      "s3tables": "running",
+      "iot": "running",
+      "iotdata": "running",
+      "cloudhsmv2": "running",
+      "organizations": "running",
+      "rum": "running",
+      "guardduty": "running",
+      "route53resolver": "running",
+      "connect": "running",
+      "app-integrations": "running",
+      "cognito-identity": "running",
+      "globalaccelerator": "running",
+      "datasync": "running",
+      "network-firewall": "running",
+      "servicecatalog": "running",
+      "controlcatalog": "running",
+      "controltower": "running",
+      "aps": "running",
+      "lakeformation": "running",
+      "efs": "running",
+      "codeguru-reviewer": "running",
+      "verifiedpermissions": "running",
+      "marketplace": "running"
+    },
+    "iam_enforcement_hint": null
+  },
+  "started_at": "2026-10-02T05:03:13.877069+00:00",
+  "finished_at": "2026-10-02T05:04:04.949363+00:00",
+  "services": {
+    "iam": {
+      "available": true,
+      "operations": {
+        "CreateUser": {
+          "operation": "CreateUser",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "GetUser": {
+          "operation": "GetUser",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "ListUsers": {
+          "operation": "ListUsers",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "Users_count": 2
+          },
+          "detail": null
+        },
+        "CreateRole": {
+          "operation": "CreateRole",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "GetRole": {
+          "operation": "GetRole",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "ListRoles": {
+          "operation": "ListRoles",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "Roles_count": 3
+          },
+          "detail": null
+        },
+        "CreateAccessKey": {
+          "operation": "CreateAccessKey",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "AccessKey": "created, value withheld"
+          },
+          "detail": null
+        },
+        "ListAccessKeys": {
+          "operation": "ListAccessKeys",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "PutUserPolicy": {
+          "operation": "PutUserPolicy",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "GetUserPolicy": {
+          "operation": "GetUserPolicy",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "UserName": "cloudsec-iam4566-u"
+          },
+          "detail": null
+        },
+        "InlinePolicyPersisted": {
+          "operation": "GetUserPolicy",
+          "ok": true
+        },
+        "InlinePolicyDocumentShape": {
+          "operation": "GetUserPolicy",
+          "observed_type": "dict",
+          "note": "AWS returns a URL-encoded string; record what Floci returns"
+        },
+        "ListUserPolicies": {
+          "operation": "ListUserPolicies",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "PutUserPolicyScoped": {
+          "operation": "PutUserPolicy",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "GetUserPolicyScoped": {
+          "operation": "GetUserPolicy",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "UserName": "cloudsec-iam4566-u"
+          },
+          "detail": null
+        },
+        "CreatePolicy": {
+          "operation": "CreatePolicy",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "GetPolicy": {
+          "operation": "GetPolicy",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "AttachUserPolicy": {
+          "operation": "AttachUserPolicy",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "ListAttachedUserPolicies": {
+          "operation": "ListAttachedUserPolicies",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "ManagedPolicyAttached": {
+          "operation": "ListAttachedUserPolicies",
+          "ok": true
+        },
+        "DetachUserPolicy": {
+          "operation": "DetachUserPolicy",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "DetachedPolicyGone": {
+          "operation": "ListAttachedUserPolicies",
+          "ok": true
+        },
+        "DeletePolicy": {
+          "operation": "DeletePolicy",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        }
+      },
+      "authorization": {},
+      "gaps": [],
+      "enforcement_signals": {}
+    },
+    "sts": {
+      "available": true,
+      "operations": {
+        "GetCallerIdentity": {
+          "operation": "GetCallerIdentity",
+          "service": "sts",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "Arn": "arn:aws:iam::000000000000:root",
+            "Account": "000000000000"
+          },
+          "detail": null
+        },
+        "GetCallerIdentityArn": "arn:aws:iam::000000000000:root",
+        "GetCallerIdentityAccount": "000000000000",
+        "AssumeRoleMissingRole": {
+          "operation": "AssumeRole",
+          "service": "sts",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "AssumeRole": {
+          "operation": "AssumeRole",
+          "service": "sts",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "AssumeRoleSession": {
+          "expiration": "2026-10-02T06:03:15.073785+00:00",
+          "assumed_role_arn": "arn:aws:sts::000000000000:assumed-role/cloudsec-stsok-4566/ok4566",
+          "packed_policy_size": 0,
+          "session_token_returned": true,
+          "note": "expiry recorded from the response; probe does not wait for expiry"
+        },
+        "GetCallerIdentityWithTempCreds": {
+          "operation": "GetCallerIdentity",
+          "service": "sts",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "Arn": "arn:aws:sts::000000000000:assumed-role/cloudsec-stsok-4566/floci-session",
+            "Account": "000000000000"
+          },
+          "detail": null
+        },
+        "TempCredsCallerArn": "arn:aws:sts::000000000000:assumed-role/cloudsec-stsok-4566/floci-session",
+        "TempCredsMatchAssumedRole": false,
+        "TempCredsArnVsAssumeRoleArn": {
+          "get_caller_identity": "arn:aws:sts::000000000000:assumed-role/cloudsec-stsok-4566/floci-session",
+          "assume_role": "arn:aws:sts::000000000000:assumed-role/cloudsec-stsok-4566/ok4566"
+        },
+        "TempCredsGetObject": {
+          "operation": "GetObject",
+          "service": "s3",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "TempCredsScopedOutOfScope": {
+          "label": "F-scope-y",
+          "service": "s3",
+          "operation": "s3:GetObject",
+          "principal_type": "assumed-role-scoped",
+          "principal": "arn:aws:iam::000000000000:role/cloudsec-stsscope-4566",
+          "target_resource": "arn:aws:s3:::cloudsec-sts-bucket-other-4566/ok.txt",
+          "expected_aws_outcome": "deny",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": false,
+          "policy_confirmed": true,
+          "signals": [
+            "sts_role_scoping"
+          ],
+          "classification": false,
+          "notes": "out-of-scope bucket"
+        },
+        "TempCredsExplicitDeny": {
+          "operation": "GetObject",
+          "service": "s3",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        }
+      },
+      "authorization": {
+        "role_allow": {
+          "label": "F-allow",
+          "service": "s3",
+          "operation": "s3:GetObject",
+          "principal_type": "assumed-role",
+          "principal": "arn:aws:iam::000000000000:role/cloudsec-stsok-4566",
+          "target_resource": "arn:aws:s3:::cloudsec-sts-bucket-4566/ok.txt",
+          "expected_aws_outcome": "allow",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": false,
+          "policy_confirmed": true,
+          "signals": [
+            "sts_role_restrictions"
+          ],
+          "classification": true,
+          "notes": "role grants s3:GetObject; credentials obtained via AssumeRole"
+        },
+        "role_scoped": {
+          "in_scope": {
+            "operation": "GetObject",
+            "service": "s3",
+            "ok": true,
+            "status": null,
+            "exception": null,
+            "error_code": null,
+            "error_message": null,
+            "request_id": null,
+            "result_summary": {},
+            "detail": null
+          },
+          "out_of_scope": {
+            "label": "F-scope-y",
+            "service": "s3",
+            "operation": "s3:GetObject",
+            "principal_type": "assumed-role-scoped",
+            "principal": "arn:aws:iam::000000000000:role/cloudsec-stsscope-4566",
+            "target_resource": "arn:aws:s3:::cloudsec-sts-bucket-other-4566/ok.txt",
+            "expected_aws_outcome": "deny",
+            "actual_allowed": true,
+            "http_status": null,
+            "exception": null,
+            "error_code": null,
+            "request_id": null,
+            "state_changed": false,
+            "policy_confirmed": true,
+            "signals": [
+              "sts_role_scoping"
+            ],
+            "classification": false,
+            "notes": "out-of-scope bucket"
+          }
+        },
+        "role_explicit_deny": {
+          "label": "F-deny",
+          "service": "s3",
+          "operation": "s3:GetObject",
+          "principal_type": "assumed-role-deny",
+          "principal": "arn:aws:iam::000000000000:role/cloudsec-stsdeny-4566",
+          "target_resource": "arn:aws:s3:::cloudsec-sts-bucket-4566/ok.txt",
+          "expected_aws_outcome": "deny",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": false,
+          "policy_confirmed": true,
+          "signals": [
+            "sts_role_restrictions"
+          ],
+          "classification": false,
+          "notes": "explicit Deny on the role, exercised with temporary credentials"
+        },
+        "trust_permissive": {
+          "label": "T-A",
+          "service": "sts",
+          "operation": "sts:AssumeRole",
+          "principal_type": "iam-user",
+          "principal": "arn:aws:iam::000000000000:user/cloudsec-trust4566",
+          "target_resource": "arn:aws:iam::000000000000:role/cloudsec-trust-4566",
+          "expected_aws_outcome": "allow",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": false,
+          "policy_confirmed": true,
+          "signals": [],
+          "classification": true,
+          "notes": "role trusts '*'; this user is outside the intended principal set"
+        },
+        "trust_restricted": {
+          "label": "T-B",
+          "service": "sts",
+          "operation": "sts:AssumeRole",
+          "principal_type": "iam-user-not-in-trust",
+          "principal": "arn:aws:iam::000000000000:user/cloudsec-outsider4566",
+          "target_resource": "arn:aws:iam::000000000000:role/cloudsec-trustonly-4566",
+          "expected_aws_outcome": "deny",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": false,
+          "policy_confirmed": true,
+          "signals": [
+            "sts_trust_enforcement"
+          ],
+          "classification": false,
+          "notes": "trust policy names a different user"
+        }
+      },
+      "gaps": [
+        "STS AssumeRole succeeded for a role ARN that was never created; Floci minted credentials for it",
+        "GetCallerIdentity under assumed-role credentials reported 'arn:aws:sts::000000000000:assumed-role/cloudsec-stsok-4566/floci-session' rather than the ARN returned by AssumeRole ('arn:aws:sts::000000000000:assumed-role/cloudsec-stsok-4566/ok4566')"
+      ],
+      "enforcement_signals": {}
+    },
+    "credentials": {
+      "available": true,
+      "operations": {},
+      "authorization": {},
+      "observations": {
+        "test_test_sts": {
+          "operation": "GetCallerIdentity",
+          "service": "sts",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "Arn": "arn:aws:iam::000000000000:root",
+            "Account": "000000000000"
+          },
+          "detail": null
+        },
+        "test_test_s3": {
+          "operation": "ListBuckets",
+          "service": "s3",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "unregistered_akid_sts": {
+          "operation": "GetCallerIdentity",
+          "service": "sts",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "Arn": "arn:aws:iam::000000000000:root",
+            "Account": "000000000000"
+          },
+          "detail": null
+        },
+        "unregistered_akid_s3": {
+          "operation": "ListBuckets",
+          "service": "s3",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "unregistered_akid_iam": {
+          "operation": "ListUsers",
+          "service": "iam",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "Users_count": 1
+          },
+          "detail": null
+        }
+      },
+      "gaps": [
+        "an unregistered access key was accepted for GetCallerIdentity (None); Floci performed no credential validation",
+        "an unregistered access key was accepted for ListBuckets (None); Floci performed no credential validation",
+        "an unregistered access key was accepted for ListUsers (None); Floci performed no credential validation",
+        "a verified implicit deny was not enforced on this endpoint, so policy evaluation is inactive here and action resolution cannot be assessed"
+      ],
+      "enforcement_signals": {},
+      "credential_selection": {
+        "selected": "probe_credential",
+        "candidates": [
+          {
+            "credential_shape": "probe_credential",
+            "access_key_id": "CLOUDSECPROBEKEY000001",
+            "get_caller_identity": {
+              "operation": "GetCallerIdentity",
+              "service": "sts",
+              "ok": true,
+              "status": null,
+              "exception": null,
+              "error_code": null,
+              "error_message": null,
+              "request_id": null,
+              "result_summary": {
+                "Arn": "arn:aws:iam::000000000000:root",
+                "Account": "000000000000"
+              },
+              "detail": null
+            },
+            "iam_list_users": {
+              "operation": "ListUsers",
+              "service": "iam",
+              "ok": true,
+              "status": null,
+              "exception": null,
+              "error_code": null,
+              "error_message": null,
+              "request_id": null,
+              "result_summary": {
+                "Users_count": 1
+              },
+              "detail": null
+            },
+            "sts_assume_role_missing_role": {
+              "operation": "AssumeRole",
+              "service": "sts",
+              "ok": true,
+              "status": null,
+              "exception": null,
+              "error_code": null,
+              "error_message": null,
+              "request_id": null,
+              "result_summary": {},
+              "detail": null
+            },
+            "administrative_capability": true
+          },
+          {
+            "credential_shape": "test_credential",
+            "access_key_id": "test",
+            "get_caller_identity": {
+              "operation": "GetCallerIdentity",
+              "service": "sts",
+              "ok": true,
+              "status": null,
+              "exception": null,
+              "error_code": null,
+              "error_message": null,
+              "request_id": null,
+              "result_summary": {
+                "Arn": "arn:aws:iam::000000000000:root",
+                "Account": "000000000000"
+              },
+              "detail": null
+            },
+            "iam_list_users": {
+              "operation": "ListUsers",
+              "service": "iam",
+              "ok": true,
+              "status": null,
+              "exception": null,
+              "error_code": null,
+              "error_message": null,
+              "request_id": null,
+              "result_summary": {
+                "Users_count": 1
+              },
+              "detail": null
+            },
+            "sts_assume_role_missing_role": {
+              "operation": "AssumeRole",
+              "service": "sts",
+              "ok": true,
+              "status": null,
+              "exception": null,
+              "error_code": null,
+              "error_message": null,
+              "request_id": null,
+              "result_summary": {},
+              "detail": null
+            },
+            "administrative_capability": true
+          },
+          {
+            "credential_shape": "account_root_credential",
+            "access_key_id": "000000000000",
+            "get_caller_identity": {
+              "operation": "GetCallerIdentity",
+              "service": "sts",
+              "ok": true,
+              "status": null,
+              "exception": null,
+              "error_code": null,
+              "error_message": null,
+              "request_id": null,
+              "result_summary": {
+                "Arn": "arn:aws:iam::000000000000:root",
+                "Account": "000000000000"
+              },
+              "detail": null
+            },
+            "iam_list_users": {
+              "operation": "ListUsers",
+              "service": "iam",
+              "ok": true,
+              "status": null,
+              "exception": null,
+              "error_code": null,
+              "error_message": null,
+              "request_id": null,
+              "result_summary": {
+                "Users_count": 1
+              },
+              "detail": null
+            },
+            "sts_assume_role_missing_role": {
+              "operation": "AssumeRole",
+              "service": "sts",
+              "ok": true,
+              "status": null,
+              "exception": null,
+              "error_code": null,
+              "error_message": null,
+              "request_id": null,
+              "result_summary": {},
+              "detail": null
+            },
+            "administrative_capability": true
+          }
+        ]
+      },
+      "unresolved_action": {
+        "observations": [
+          {
+            "service": "s3",
+            "operation": "s3:GetObject",
+            "error_code": null,
+            "honored": false
+          },
+          {
+            "service": "s3",
+            "operation": "s3:GetObject",
+            "error_code": null,
+            "honored": false
+          },
+          {
+            "service": "sts",
+            "operation": "sts:AssumeRole",
+            "error_code": null,
+            "honored": false
+          },
+          {
+            "service": "s3",
+            "operation": "s3:GetObject",
+            "error_code": null,
+            "honored": false
+          },
+          {
+            "service": "s3",
+            "operation": "s3:GetObject",
+            "error_code": null,
+            "honored": false
+          },
+          {
+            "service": "s3",
+            "operation": "s3:PutObject",
+            "error_code": null,
+            "honored": false
+          },
+          {
+            "service": "s3",
+            "operation": "s3:GetObject",
+            "error_code": null,
+            "honored": false
+          },
+          {
+            "service": "s3",
+            "operation": "s3:GetObject",
+            "error_code": null,
+            "honored": false
+          },
+          {
+            "service": "secretsmanager",
+            "operation": "secretsmanager:GetSecretValue",
+            "error_code": null,
+            "honored": false
+          },
+          {
+            "service": "secretsmanager",
+            "operation": "secretsmanager:GetSecretValue",
+            "error_code": null,
+            "honored": false
+          },
+          {
+            "service": "kms",
+            "operation": "kms:Decrypt",
+            "error_code": null,
+            "honored": false
+          },
+          {
+            "service": "logs",
+            "operation": "logs:PutLogEvents",
+            "error_code": null,
+            "honored": false
+          },
+          {
+            "service": "config",
+            "operation": "config:PutEvaluations",
+            "error_code": null,
+            "honored": false
+          },
+          {
+            "service": "lambda",
+            "operation": "lambda:GetFunctionConfiguration",
+            "error_code": null,
+            "honored": false
+          }
+        ],
+        "definition": "an action whose verified explicit Deny was not honoured is treated as evidence that the IAM resolver did not map it"
+      }
+    },
+    "s3": {
+      "available": true,
+      "operations": {
+        "CreateBucket.x": {
+          "operation": "CreateBucket",
+          "service": "s3",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "BucketName": "cloudsec-x-4566",
+            "reused": false
+          },
+          "detail": null
+        },
+        "CreateBucket.y": {
+          "operation": "CreateBucket",
+          "service": "s3",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "BucketName": "cloudsec-y-4566",
+            "reused": false
+          },
+          "detail": null
+        },
+        "PutObject": {
+          "operation": "PutObject",
+          "ok": true,
+          "status": 200
+        },
+        "GetObject": {
+          "operation": "GetObject",
+          "service": "s3",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "HeadObject": {
+          "operation": "HeadObject",
+          "ok": true,
+          "status": 200
+        },
+        "ListObjectsV2": {
+          "operation": "ListObjectsV2",
+          "service": "s3",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "Name": "cloudsec-x-4566",
+            "Contents_count": 1
+          },
+          "detail": null
+        },
+        "GetObjectBodyMatchesSynthetic": {
+          "operation": "GetObjectBody",
+          "ok": true
+        },
+        "PutBucketTagging": {
+          "operation": "PutBucketTagging",
+          "service": "s3",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "GetBucketTagging": {
+          "operation": "GetBucketTagging",
+          "service": "s3",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "PutObjectTagging": {
+          "operation": "PutObjectTagging",
+          "service": "s3",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "DeleteBucketTagging": {
+          "operation": "DeleteBucketTagging",
+          "service": "s3",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        }
+      },
+      "authorization": {
+        "identity_allow": {
+          "label": "A",
+          "service": "s3",
+          "operation": "s3:GetObject",
+          "principal_type": "iam-user",
+          "principal": "arn:aws:iam::000000000000:user/cloudsec-s3a4566",
+          "target_resource": "arn:aws:s3:::cloudsec-x-4566/*",
+          "expected_aws_outcome": "allow",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": false,
+          "policy_confirmed": true,
+          "signals": [
+            "identity_allow"
+          ],
+          "classification": true,
+          "notes": "matching Allow attached and re-read before the call"
+        },
+        "implicit_deny": {
+          "label": "B",
+          "service": "s3",
+          "operation": "s3:GetObject",
+          "principal_type": "iam-user-no-policy",
+          "principal": "arn:aws:iam::000000000000:user/cloudsec-s3b4566",
+          "target_resource": "arn:aws:s3:::cloudsec-x-4566/*",
+          "expected_aws_outcome": "deny",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": false,
+          "policy_confirmed": true,
+          "signals": [
+            "implicit_deny"
+          ],
+          "classification": false,
+          "notes": "verified that no policy is attached to this principal"
+        },
+        "explicit_deny_get": {
+          "label": "C",
+          "service": "s3",
+          "operation": "s3:GetObject",
+          "principal_type": "iam-user-deny",
+          "principal": "arn:aws:iam::000000000000:user/cloudsec-s3cget4566",
+          "target_resource": "arn:aws:s3:::cloudsec-x-4566/probe/denied.txt",
+          "expected_aws_outcome": "deny",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": true,
+          "policy_confirmed": true,
+          "signals": [
+            "explicit_deny"
+          ],
+          "classification": false,
+          "notes": "baseline Allow proven by a control object, then resource-scoped Deny",
+          "control": {
+            "baseline_policy_readback": true,
+            "baseline_operation_ok": true,
+            "baseline_error_code": null,
+            "control_object_exists": true,
+            "deny_policy_readback": true,
+            "denied_object_existed_before": true,
+            "denied_object_exists": true,
+            "target_error_code": null,
+            "target_authorization_failure": false
+          }
+        },
+        "explicit_deny_put": {
+          "label": "C",
+          "service": "s3",
+          "operation": "s3:PutObject",
+          "principal_type": "iam-user-deny",
+          "principal": "arn:aws:iam::000000000000:user/cloudsec-s3cput4566",
+          "target_resource": "arn:aws:s3:::cloudsec-x-4566/probe/denied.txt",
+          "expected_aws_outcome": "deny",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": true,
+          "policy_confirmed": true,
+          "signals": [
+            "explicit_deny"
+          ],
+          "classification": false,
+          "notes": "baseline Allow proven by a control object, then resource-scoped Deny",
+          "control": {
+            "baseline_policy_readback": true,
+            "baseline_operation_ok": true,
+            "baseline_error_code": null,
+            "control_object_exists": true,
+            "deny_policy_readback": true,
+            "denied_object_existed_before": false,
+            "denied_object_exists": true,
+            "target_error_code": null,
+            "target_authorization_failure": false
+          }
+        },
+        "resource_scoped_allow": {
+          "x": {
+            "operation": "GetObject",
+            "service": "s3",
+            "ok": true,
+            "status": null,
+            "exception": null,
+            "error_code": null,
+            "error_message": null,
+            "request_id": null,
+            "result_summary": {},
+            "detail": null
+          },
+          "y": {
+            "label": "D-y",
+            "service": "s3",
+            "operation": "s3:GetObject",
+            "principal_type": "iam-user-scoped-allow",
+            "principal": "arn:aws:iam::000000000000:user/cloudsec-s3d4566",
+            "target_resource": "arn:aws:s3:::cloudsec-y-4566/*",
+            "expected_aws_outcome": "deny",
+            "actual_allowed": true,
+            "http_status": null,
+            "exception": null,
+            "error_code": null,
+            "request_id": null,
+            "state_changed": false,
+            "policy_confirmed": true,
+            "signals": [
+              "resource_scoping_allow"
+            ],
+            "classification": false,
+            "notes": "out-of-scope resource"
+          }
+        },
+        "resource_scoped_deny": {
+          "x": {
+            "operation": "GetObject",
+            "service": "s3",
+            "ok": true,
+            "status": null,
+            "exception": null,
+            "error_code": null,
+            "error_message": null,
+            "request_id": null,
+            "result_summary": {},
+            "detail": null
+          },
+          "y": {
+            "label": "E-y",
+            "service": "s3",
+            "operation": "s3:GetObject",
+            "principal_type": "iam-user-scoped-deny",
+            "principal": "arn:aws:iam::000000000000:user/cloudsec-s3e4566",
+            "target_resource": "arn:aws:s3:::cloudsec-y-4566/*",
+            "expected_aws_outcome": "allow",
+            "actual_allowed": true,
+            "http_status": null,
+            "exception": null,
+            "error_code": null,
+            "request_id": null,
+            "state_changed": false,
+            "policy_confirmed": true,
+            "signals": [
+              "resource_scoping_deny"
+            ],
+            "classification": true,
+            "notes": "resource not named by the Deny"
+          }
+        },
+        "assumed_role_allow": {
+          "error": "role creation failed"
+        },
+        "assumed_role_deny": {
+          "error": "role creation failed"
+        },
+        "bucket_policy_deny": {
+          "label": "S3-BP",
+          "service": "s3",
+          "operation": "s3:GetObject",
+          "principal_type": "iam-user-with-bucket-policy-deny",
+          "principal": "arn:aws:iam::000000000000:user/cloudsec-s3bp4566",
+          "target_resource": "arn:aws:s3:::cloudsec-x-4566/*",
+          "expected_aws_outcome": "deny",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": false,
+          "policy_confirmed": true,
+          "signals": [
+            "s3_bucket_policy_deny"
+          ],
+          "classification": false,
+          "notes": "bucket policy Deny only; identity policy allows the action"
+        }
+      },
+      "gaps": [
+        "S3 bucket-policy Deny was not observed to block GetObject even though the policy was confirmed stored"
+      ],
+      "enforcement_signals": {
+        "s3": {
+          "identity_allow_observed": true,
+          "implicit_deny_observed": false,
+          "explicit_deny_observed": false,
+          "resource_scoping_observed": true
+        }
+      }
+    },
+    "secretsmanager": {
+      "available": true,
+      "operations": {
+        "CreateSecret": {
+          "operation": "CreateSecret",
+          "service": "secretsmanager",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "Name": "cloudsec-m0-4566-c5b28b96",
+            "VersionId": "5448fee4-5df6-46a4-8deb-a32dd88321e2"
+          },
+          "detail": null
+        },
+        "DescribeSecret": {
+          "operation": "DescribeSecret",
+          "service": "secretsmanager",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "Name": "cloudsec-m0-4566-c5b28b96"
+          },
+          "detail": null
+        },
+        "ListSecrets": {
+          "operation": "ListSecrets",
+          "service": "secretsmanager",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "GetSecretValue": {
+          "operation": "GetSecretValue",
+          "service": "secretsmanager",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "Name": "cloudsec-m0-4566-c5b28b96",
+            "VersionId": "5448fee4-5df6-46a4-8deb-a32dd88321e2"
+          },
+          "detail": null
+        },
+        "GetSecretValueMatchesSynthetic": {
+          "operation": "GetSecretValue",
+          "ok": true,
+          "note": "value is synthetic; raw value never persisted"
+        },
+        "DeleteSecret": {
+          "operation": "DeleteSecret",
+          "service": "secretsmanager",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "Name": "cloudsec-m0-4566-c5b28b96"
+          },
+          "detail": null
+        },
+        "DescribeSecretAfterDelete": {
+          "operation": "DescribeSecret",
+          "service": "secretsmanager",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "Name": "cloudsec-m0-4566-c5b28b96"
+          },
+          "detail": null
+        }
+      },
+      "authorization": {
+        "allow": {
+          "label": "SM-A",
+          "service": "secretsmanager",
+          "operation": "secretsmanager:GetSecretValue",
+          "principal_type": "iam-user",
+          "principal": "arn:aws:iam::000000000000:user/cloudsec-secallow4566",
+          "target_resource": "arn:aws:secretsmanager:us-east-1:000000000000:secret:cloudsec-m0-4566-c5b28b96-K5DQZ5",
+          "expected_aws_outcome": "allow",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": false,
+          "policy_confirmed": true,
+          "signals": [
+            "secretsmanager_allow"
+          ],
+          "classification": true,
+          "notes": ""
+        },
+        "implicit_deny": {
+          "label": "SM-B",
+          "service": "secretsmanager",
+          "operation": "secretsmanager:GetSecretValue",
+          "principal_type": "iam-user-no-policy",
+          "principal": "arn:aws:iam::000000000000:user/cloudsec-secnone4566",
+          "target_resource": "arn:aws:secretsmanager:us-east-1:000000000000:secret:cloudsec-m0-4566-c5b28b96-K5DQZ5",
+          "expected_aws_outcome": "deny",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": false,
+          "policy_confirmed": true,
+          "signals": [
+            "secretsmanager_implicit_deny"
+          ],
+          "classification": false,
+          "notes": ""
+        },
+        "explicit_deny": {
+          "label": "SM-C",
+          "service": "secretsmanager",
+          "operation": "secretsmanager:GetSecretValue",
+          "principal_type": "iam-user-deny",
+          "principal": "arn:aws:iam::000000000000:user/cloudsec-secdeny4566",
+          "target_resource": "arn:aws:secretsmanager:us-east-1:000000000000:secret:cloudsec-m0-4566-c5b28b96-K5DQZ5",
+          "expected_aws_outcome": "deny",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": false,
+          "policy_confirmed": true,
+          "signals": [
+            "secretsmanager_deny"
+          ],
+          "classification": false,
+          "notes": ""
+        }
+      },
+      "gaps": [],
+      "enforcement_signals": {
+        "secretsmanager": {
+          "secretsmanager_allow_observed": true,
+          "secretsmanager_deny_observed": false
+        }
+      }
+    },
+    "kms": {
+      "available": true,
+      "operations": {
+        "CreateKey": {
+          "operation": "CreateKey",
+          "service": "kms",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "DescribeKey": {
+          "operation": "DescribeKey",
+          "service": "kms",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "CreateAlias": {
+          "operation": "CreateAlias",
+          "service": "kms",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "Encrypt": {
+          "operation": "Encrypt",
+          "service": "kms",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "KeyId": "arn:aws:kms:us-east-1:000000000000:key/7d5a12ff-667b-41aa-91a4-b9bc4d846735"
+          },
+          "detail": null
+        },
+        "CiphertextBlobType": {
+          "operation": "Encrypt",
+          "observed_type": "bytes",
+          "note": "AWS returns base64 bytes; record what Floci returns"
+        },
+        "EncryptEnvelopeMagic": {
+          "operation": "Encrypt",
+          "ok": true,
+          "observed_magic": "KMS3",
+          "note": "probe reports Floci's documented internal envelope marker"
+        },
+        "Decrypt": {
+          "operation": "Decrypt",
+          "service": "kms",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "KeyId": "arn:aws:kms:us-east-1:000000000000:key/7d5a12ff-667b-41aa-91a4-b9bc4d846735"
+          },
+          "detail": null
+        },
+        "DecryptRoundTrip": {
+          "operation": "Decrypt",
+          "ok": true
+        },
+        "PutKeyPolicy": {
+          "operation": "PutKeyPolicy",
+          "service": "kms",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "GetKeyPolicy": {
+          "operation": "GetKeyPolicy",
+          "service": "kms",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "ScheduleKeyDeletion": {
+          "operation": "ScheduleKeyDeletion",
+          "service": "kms",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "KeyId": "arn:aws:kms:us-east-1:000000000000:key/7d5a12ff-667b-41aa-91a4-b9bc4d846735"
+          },
+          "detail": null
+        },
+        "DescribeKeyAfterCleanup": {
+          "operation": "DescribeKey",
+          "service": "kms",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        }
+      },
+      "authorization": {
+        "explicit_deny": {
+          "label": "KMS-C",
+          "service": "kms",
+          "operation": "kms:Decrypt",
+          "principal_type": "iam-user-deny",
+          "principal": "arn:aws:iam::000000000000:user/cloudsec-kmsdeny4566",
+          "target_resource": "arn:aws:kms:us-east-1:000000000000:key/7d5a12ff-667b-41aa-91a4-b9bc4d846735",
+          "expected_aws_outcome": "deny",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": false,
+          "policy_confirmed": true,
+          "signals": [
+            "kms_deny"
+          ],
+          "classification": false,
+          "notes": ""
+        },
+        "key_policy_deny": {
+          "label": "KMS-KP",
+          "service": "kms",
+          "operation": "kms:Decrypt",
+          "principal_type": "probe-root",
+          "principal": "arn:aws:kms:us-east-1:000000000000:key/7d5a12ff-667b-41aa-91a4-b9bc4d846735",
+          "target_resource": "arn:aws:kms:us-east-1:000000000000:key/7d5a12ff-667b-41aa-91a4-b9bc4d846735",
+          "expected_aws_outcome": "deny",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": false,
+          "policy_confirmed": true,
+          "signals": [
+            "kms_key_policy_deny"
+          ],
+          "classification": false,
+          "notes": "key policy Deny vs root caller"
+        }
+      },
+      "gaps": [
+        "KMS key-policy Deny was not observed to block Decrypt"
+      ],
+      "enforcement_signals": {
+        "kms": {
+          "kms_deny_observed": false
+        }
+      }
+    },
+    "cloudwatch_logs": {
+      "available": true,
+      "operations": {
+        "CreateLogGroup": {
+          "operation": "CreateLogGroup",
+          "service": "logs",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "CreateLogStream": {
+          "operation": "CreateLogStream",
+          "service": "logs",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "DescribeLogStreams": {
+          "operation": "DescribeLogStreams",
+          "service": "logs",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "PutLogEvents": {
+          "operation": "PutLogEvents",
+          "service": "logs",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "FilterLogEvents": {
+          "operation": "FilterLogEvents",
+          "service": "logs",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "FilterLogEventsFoundMarker": {
+          "operation": "FilterLogEvents",
+          "ok": true
+        },
+        "GetLogEvents": {
+          "operation": "GetLogEvents",
+          "service": "logs",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "DeleteLogGroup": {
+          "operation": "DeleteLogGroup",
+          "service": "logs",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        }
+      },
+      "authorization": {
+        "explicit_deny": {
+          "label": "CW-C",
+          "service": "logs",
+          "operation": "logs:PutLogEvents",
+          "principal_type": "iam-user-deny",
+          "principal": "arn:aws:iam::000000000000:user/cloudsec-logsdeny4566",
+          "target_resource": "arn:aws:logs:us-east-1:000000000000:log-group:cloudsec-probe-group-4566:log-stream:probe",
+          "expected_aws_outcome": "deny",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": true,
+          "policy_confirmed": true,
+          "signals": [
+            "logs_deny"
+          ],
+          "classification": false,
+          "notes": "re-read the group to see whether the denied write landed"
+        }
+      },
+      "gaps": [],
+      "enforcement_signals": {
+        "logs": {
+          "logs_deny_observed": false
+        }
+      }
+    },
+    "cloudtrail": {
+      "available": true,
+      "operations": {
+        "LookupEvents": {
+          "operation": "LookupEvents",
+          "service": "cloudtrail",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "LookupEventsCount": 0,
+        "FlushWaitSeconds": 45,
+        "TrailObjectKeys": [
+          "AWSLogs/000000000000/CloudTrail/us-east-1/2026/10/02/000000000000_CloudTrail_us-east-1_20261002T0503Z_HXoYmJoIGGhmEF2U.json.gz"
+        ],
+        "TrailRecordCount": 4,
+        "EventNamesObserved": [
+          "GetObject",
+          "HeadObject",
+          "PutObject"
+        ],
+        "UniqueEventNames": 3,
+        "RequestIdsObserved": 4,
+        "RecordsCarryingErrorCode": [],
+        "SampleRecordShape": {
+          "eventVersion": "1.11",
+          "eventSource": "s3.amazonaws.com",
+          "eventTime": "2026-10-02T05:03:17Z",
+          "eventName": "PutObject",
+          "awsRegion": "us-east-1",
+          "userIdentity_keys": [
+            "accessKeyId",
+            "accountId",
+            "arn",
+            "principalId",
+            "type",
+            "userName"
+          ],
+          "requestParameters_present": true,
+          "errorCode_present": false,
+          "keys": [
+            "additionalEventData",
+            "awsRegion",
+            "eventCategory",
+            "eventID",
+            "eventName",
+            "eventSource",
+            "eventTime",
+            "eventType",
+            "eventVersion",
+            "managementEvent",
+            "readOnly",
+            "recipientAccountId",
+            "requestID",
+            "requestParameters",
+            "resources",
+            "responseElements",
+            "sourceIPAddress",
+            "tlsDetails",
+            "userAgent",
+            "userIdentity"
+          ]
+        },
+        "StopLogging": {
+          "operation": "StopLogging",
+          "service": "cloudtrail",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "DescribeTrails": {
+          "operation": "DescribeTrails",
+          "service": "cloudtrail",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "trailList_count": 1
+          },
+          "detail": null
+        },
+        "DeleteTrail": {
+          "operation": "DeleteTrail",
+          "service": "cloudtrail",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        }
+      },
+      "authorization": {
+        "denied_attempt": {
+          "operation": "GetObject",
+          "service": "s3",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        }
+      },
+      "gaps": [
+        "CloudTrail trail files contained no IAM management events although IncludeManagementEvents was requested"
+      ],
+      "enforcement_signals": {},
+      "observations": {
+        "trail_started": true,
+        "trail_is_logging": true,
+        "management_events_requested": true,
+        "s3_data_events_selected": "arn:aws:s3:::cloudsec-trail-source-4566/",
+        "put_object_seen": true,
+        "get_object_seen": true,
+        "head_object_seen": true,
+        "iam_create_user_seen": false,
+        "iam_list_users_seen": false,
+        "iam_denied_attempt": {
+          "policy_confirmed": true,
+          "outcome": {
+            "operation": "GetObject",
+            "service": "s3",
+            "ok": true,
+            "status": null,
+            "exception": null,
+            "error_code": null,
+            "error_message": null,
+            "request_id": null,
+            "result_summary": {},
+            "detail": null
+          }
+        },
+        "denied_attempt_seen_in_trail": false,
+        "lookup_events_returned": 0,
+        "lookup_events_shape": null
+      }
+    },
+    "config": {
+      "available": true,
+      "operations": {
+        "PutConfigurationRecorder": {
+          "operation": "PutConfigurationRecorder",
+          "service": "config",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "StartConfigurationRecorder": {
+          "operation": "StartConfigurationRecorder",
+          "service": "config",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "DescribeConfigurationRecorders": {
+          "operation": "DescribeConfigurationRecorders",
+          "service": "config",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "DescribeConfigurationRecorderStatus": {
+          "operation": "DescribeConfigurationRecorderStatus",
+          "service": "config",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "RecorderRecording": {
+          "operation": "DescribeConfigurationRecorderStatus",
+          "observed_recording": true
+        },
+        "PutDeliveryChannel": {
+          "operation": "PutDeliveryChannel",
+          "service": "config",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "DescribeDeliveryChannels": {
+          "operation": "DescribeDeliveryChannels",
+          "service": "config",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "DeliveryChannelRoundTrip": {
+          "operation": "DescribeDeliveryChannels",
+          "ok": true
+        },
+        "PutConfigRule": {
+          "operation": "PutConfigRule",
+          "service": "config",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "DescribeConfigRules": {
+          "operation": "DescribeConfigRules",
+          "service": "config",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "DescribeComplianceByConfigRuleBefore": {
+          "operation": "DescribeComplianceByConfigRule",
+          "service": "config",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "ComplianceBeforeEvaluations": [
+          "INSUFFICIENT_DATA"
+        ],
+        "ComplianceBeforeIsInsufficientData": true,
+        "StartConfigRulesEvaluation": {
+          "operation": "StartConfigRulesEvaluation",
+          "service": "config",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "DescribeConfigRuleEvaluationStatus": {
+          "operation": "DescribeConfigRuleEvaluationStatus",
+          "service": "config",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "PutEvaluations": {
+          "operation": "PutEvaluations",
+          "service": "config",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "DescribeComplianceByConfigRuleAfter": {
+          "operation": "DescribeComplianceByConfigRule",
+          "service": "config",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "ComplianceAfterEvaluations": [
+          "COMPLIANT"
+        ],
+        "ComplianceReflectsSubmittedEvaluation": true,
+        "ComplianceResourceObserved": null,
+        "GetComplianceDetailsByConfigRule": {
+          "operation": "GetComplianceDetailsByConfigRule",
+          "service": "config",
+          "ok": false,
+          "status": null,
+          "exception": "ParamValidationError",
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": "Parameter validation failed:\nMissing required parameter in input: \"ConfigRuleName\"\nUnknown parameter in input: \"ConfigRuleNames\", must be one of: ConfigRuleName, ComplianceTypes, Limit, NextToken"
+        },
+        "EvaluationResultsCount": null,
+        "AutoRecordedConfigurationItems": {
+          "operation": "ListDiscoveredResources",
+          "ok": false,
+          "count": null,
+          "note": "a running recorder with no discovered resources means Floci does not capture configuration changes itself"
+        },
+        "GetResourceConfigHistory": {
+          "operation": "GetResourceConfigHistory",
+          "service": "config",
+          "ok": false,
+          "status": 400,
+          "exception": "ClientError",
+          "error_code": "InvalidAction",
+          "error_message": "Could not find operation GetResourceConfigHistory",
+          "request_id": "b12c70e2-837b-48a6-a266-092e4438309e",
+          "result_summary": {},
+          "detail": "An error occurred (InvalidAction) when calling the GetResourceConfigHistory operation: Could not find operation GetResourceConfigHistory",
+          "observed_error_code": "InvalidAction"
+        },
+        "SelectResourceConfig": {
+          "operation": "SelectResourceConfig",
+          "service": "config",
+          "ok": false,
+          "status": 400,
+          "exception": "ClientError",
+          "error_code": "InvalidAction",
+          "error_message": "Could not find operation SelectResourceConfig",
+          "request_id": "8450c830-01f1-4b9c-bdd8-936bd1d45102",
+          "result_summary": {},
+          "detail": "An error occurred (InvalidAction) when calling the SelectResourceConfig operation: Could not find operation SelectResourceConfig",
+          "observed_error_code": "InvalidAction"
+        },
+        "ListDiscoveredResources": {
+          "operation": "ListDiscoveredResources",
+          "service": "config",
+          "ok": false,
+          "status": 400,
+          "exception": "ClientError",
+          "error_code": "InvalidAction",
+          "error_message": "Could not find operation ListDiscoveredResources",
+          "request_id": "4caf1014-8b42-47f3-94af-33f9a95cb64a",
+          "result_summary": {},
+          "detail": "An error occurred (InvalidAction) when calling the ListDiscoveredResources operation: Could not find operation ListDiscoveredResources",
+          "observed_error_code": "InvalidAction"
+        },
+        "DescribeDeliveryChannelStatus": {
+          "operation": "DescribeDeliveryChannelStatus",
+          "service": "config",
+          "ok": false,
+          "status": 400,
+          "exception": "ClientError",
+          "error_code": "InvalidAction",
+          "error_message": "Could not find operation DescribeDeliveryChannelStatus",
+          "request_id": "5a581387-1f77-4c6c-9186-ef0ae7cd5441",
+          "result_summary": {},
+          "detail": "An error occurred (InvalidAction) when calling the DescribeDeliveryChannelStatus operation: Could not find operation DescribeDeliveryChannelStatus",
+          "observed_error_code": "InvalidAction"
+        },
+        "DeleteDeliveryChannel": {
+          "operation": "DeleteDeliveryChannel",
+          "service": "config",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "RecorderStatusAfterCleanup": {
+          "operation": "DescribeConfigurationRecorderStatus",
+          "service": "config",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        }
+      },
+      "authorization": {
+        "explicit_deny": {
+          "label": "CFG-C",
+          "service": "config",
+          "operation": "config:PutEvaluations",
+          "principal_type": "iam-user-deny",
+          "principal": "arn:aws:iam::000000000000:user/cloudsec-configdeny4566",
+          "target_resource": "arn:aws:s3:::cloudsec-sts-bucket-4566",
+          "expected_aws_outcome": "deny",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": false,
+          "policy_confirmed": true,
+          "signals": [
+            "config_deny"
+          ],
+          "classification": false,
+          "notes": "re-read compliance to see whether the denied submission landed"
+        }
+      },
+      "gaps": [],
+      "enforcement_signals": {
+        "config": {
+          "config_deny_observed": false
+        }
+      }
+    },
+    "lambda": {
+      "available": true,
+      "operations": {
+        "CreateFunction": {
+          "operation": "CreateFunction",
+          "service": "lambda",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "State": "Active"
+          },
+          "detail": null
+        },
+        "CreateFunctionRuntime": "python3.13",
+        "CreateFunctionCodeBytes": 220,
+        "CreateFunctionState": "Active",
+        "GetFunctionConfiguration": {
+          "operation": "GetFunctionConfiguration",
+          "service": "lambda",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "State": "Active"
+          },
+          "detail": null
+        },
+        "EnvironmentVariablesReadBack": {
+          "operation": "GetFunctionConfiguration",
+          "ok": true,
+          "variables": {
+            "CLOUDSEC_PROBE": "synthetic-value"
+          }
+        },
+        "EnvironmentSyntheticOnly": {
+          "operation": "GetFunctionConfiguration",
+          "ok": true
+        },
+        "UpdateFunctionConfiguration": {
+          "operation": "UpdateFunctionConfiguration",
+          "service": "lambda",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {
+            "State": "Active"
+          },
+          "detail": null
+        },
+        "UpdateEnvironmentReadBack": {
+          "CLOUDSEC_PROBE": "synthetic-value-2",
+          "CLOUDSEC_STAGE": "probe"
+        },
+        "Invoke": {
+          "operation": "Invoke",
+          "service": "lambda",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "InvokeElapsedSeconds": 0.44,
+        "InvokeErrorDetails": null,
+        "ListFunctions": {
+          "operation": "ListFunctions",
+          "service": "lambda",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "DeleteFunction": {
+          "operation": "DeleteFunction",
+          "service": "lambda",
+          "ok": true,
+          "status": null,
+          "exception": null,
+          "error_code": null,
+          "error_message": null,
+          "request_id": null,
+          "result_summary": {},
+          "detail": null
+        },
+        "FunctionGoneAfterDelete": {
+          "operation": "GetFunctionConfiguration",
+          "ok": true,
+          "observed_error_code": "ResourceNotFoundException"
+        }
+      },
+      "authorization": {
+        "explicit_deny": {
+          "label": "LM-C",
+          "service": "lambda",
+          "operation": "lambda:GetFunctionConfiguration",
+          "principal_type": "iam-user-deny",
+          "principal": "arn:aws:iam::000000000000:user/cloudsec-lambdadeny4566",
+          "target_resource": "arn:aws:lambda:us-east-1:000000000000:function:cloudsec-probe-fn-4566",
+          "expected_aws_outcome": "deny",
+          "actual_allowed": true,
+          "http_status": null,
+          "exception": null,
+          "error_code": null,
+          "request_id": null,
+          "state_changed": false,
+          "policy_confirmed": true,
+          "signals": [
+            "lambda_deny"
+          ],
+          "classification": false,
+          "notes": ""
+        }
+      },
+      "gaps": [],
+      "enforcement_signals": {
+        "lambda": {
+          "lambda_deny_observed": false
+        }
+      }
+    }
+  },
+  "iam_enforcement": {
+    "identity_allow_observed": true,
+    "implicit_deny_observed": false,
+    "explicit_deny_observed": false,
+    "resource_scoping_observed": false,
+    "sts_trust_enforcement_observed": false,
+    "sts_role_restrictions_observed": false,
+    "unresolved_action_behavior": null
+  },
+  "important_gaps": [
+    "[sts] STS AssumeRole succeeded for a role ARN that was never created; Floci minted credentials for it",
+    "[sts] GetCallerIdentity under assumed-role credentials reported 'arn:aws:sts::000000000000:assumed-role/cloudsec-stsok-4566/floci-session' rather than the ARN returned by AssumeRole ('arn:aws:sts::000000000000:assumed-role/cloudsec-stsok-4566/ok4566')",
+    "[credentials] an unregistered access key was accepted for GetCallerIdentity (None); Floci performed no credential validation",
+    "[credentials] an unregistered access key was accepted for ListBuckets (None); Floci performed no credential validation",
+    "[credentials] an unregistered access key was accepted for ListUsers (None); Floci performed no credential validation",
+    "[credentials] a verified implicit deny was not enforced on this endpoint, so policy evaluation is inactive here and action resolution cannot be assessed",
+    "[s3] S3 bucket-policy Deny was not observed to block GetObject even though the policy was confirmed stored",
+    "[kms] KMS key-policy Deny was not observed to block Decrypt",
+    "[cloudtrail] CloudTrail trail files contained no IAM management events although IncludeManagementEvents was requested"
+  ],
+  "authorization_matrix": {
+    "cases": [
+      {
+        "label": "F-allow",
+        "service": "s3",
+        "operation": "s3:GetObject",
+        "principal_type": "assumed-role",
+        "principal": "arn:aws:iam::000000000000:role/cloudsec-stsok-4566",
+        "target_resource": "arn:aws:s3:::cloudsec-sts-bucket-4566/ok.txt",
+        "expected_aws_outcome": "allow",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "sts_role_restrictions"
+        ],
+        "classification": true,
+        "notes": "role grants s3:GetObject; credentials obtained via AssumeRole"
+      },
+      {
+        "label": "F-scope-x",
+        "service": "s3",
+        "operation": "s3:GetObject",
+        "principal_type": "assumed-role-scoped",
+        "principal": "arn:aws:iam::000000000000:role/cloudsec-stsscope-4566",
+        "target_resource": "arn:aws:s3:::cloudsec-sts-bucket-4566/ok.txt",
+        "expected_aws_outcome": "allow",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "sts_role_scoping"
+        ],
+        "classification": true,
+        "notes": "in-scope bucket"
+      },
+      {
+        "label": "F-scope-y",
+        "service": "s3",
+        "operation": "s3:GetObject",
+        "principal_type": "assumed-role-scoped",
+        "principal": "arn:aws:iam::000000000000:role/cloudsec-stsscope-4566",
+        "target_resource": "arn:aws:s3:::cloudsec-sts-bucket-other-4566/ok.txt",
+        "expected_aws_outcome": "deny",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "sts_role_scoping"
+        ],
+        "classification": false,
+        "notes": "out-of-scope bucket"
+      },
+      {
+        "label": "F-deny",
+        "service": "s3",
+        "operation": "s3:GetObject",
+        "principal_type": "assumed-role-deny",
+        "principal": "arn:aws:iam::000000000000:role/cloudsec-stsdeny-4566",
+        "target_resource": "arn:aws:s3:::cloudsec-sts-bucket-4566/ok.txt",
+        "expected_aws_outcome": "deny",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "sts_role_restrictions"
+        ],
+        "classification": false,
+        "notes": "explicit Deny on the role, exercised with temporary credentials"
+      },
+      {
+        "label": "T-A",
+        "service": "sts",
+        "operation": "sts:AssumeRole",
+        "principal_type": "iam-user",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-trust4566",
+        "target_resource": "arn:aws:iam::000000000000:role/cloudsec-trust-4566",
+        "expected_aws_outcome": "allow",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [],
+        "classification": true,
+        "notes": "role trusts '*'; this user is outside the intended principal set"
+      },
+      {
+        "label": "T-B",
+        "service": "sts",
+        "operation": "sts:AssumeRole",
+        "principal_type": "iam-user-not-in-trust",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-outsider4566",
+        "target_resource": "arn:aws:iam::000000000000:role/cloudsec-trustonly-4566",
+        "expected_aws_outcome": "deny",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "sts_trust_enforcement"
+        ],
+        "classification": false,
+        "notes": "trust policy names a different user"
+      },
+      {
+        "label": "A",
+        "service": "s3",
+        "operation": "s3:GetObject",
+        "principal_type": "iam-user",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-s3a4566",
+        "target_resource": "arn:aws:s3:::cloudsec-x-4566/*",
+        "expected_aws_outcome": "allow",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "identity_allow"
+        ],
+        "classification": true,
+        "notes": "matching Allow attached and re-read before the call"
+      },
+      {
+        "label": "B",
+        "service": "s3",
+        "operation": "s3:GetObject",
+        "principal_type": "iam-user-no-policy",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-s3b4566",
+        "target_resource": "arn:aws:s3:::cloudsec-x-4566/*",
+        "expected_aws_outcome": "deny",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "implicit_deny"
+        ],
+        "classification": false,
+        "notes": "verified that no policy is attached to this principal"
+      },
+      {
+        "label": "C",
+        "service": "s3",
+        "operation": "s3:GetObject",
+        "principal_type": "iam-user-deny",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-s3cget4566",
+        "target_resource": "arn:aws:s3:::cloudsec-x-4566/probe/denied.txt",
+        "expected_aws_outcome": "deny",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": true,
+        "policy_confirmed": true,
+        "signals": [
+          "explicit_deny"
+        ],
+        "classification": false,
+        "notes": "baseline Allow proven by a control object, then resource-scoped Deny",
+        "control": {
+          "baseline_policy_readback": true,
+          "baseline_operation_ok": true,
+          "baseline_error_code": null,
+          "control_object_exists": true,
+          "deny_policy_readback": true,
+          "denied_object_existed_before": true,
+          "denied_object_exists": true,
+          "target_error_code": null,
+          "target_authorization_failure": false
+        }
+      },
+      {
+        "label": "C",
+        "service": "s3",
+        "operation": "s3:PutObject",
+        "principal_type": "iam-user-deny",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-s3cput4566",
+        "target_resource": "arn:aws:s3:::cloudsec-x-4566/probe/denied.txt",
+        "expected_aws_outcome": "deny",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": true,
+        "policy_confirmed": true,
+        "signals": [
+          "explicit_deny"
+        ],
+        "classification": false,
+        "notes": "baseline Allow proven by a control object, then resource-scoped Deny",
+        "control": {
+          "baseline_policy_readback": true,
+          "baseline_operation_ok": true,
+          "baseline_error_code": null,
+          "control_object_exists": true,
+          "deny_policy_readback": true,
+          "denied_object_existed_before": false,
+          "denied_object_exists": true,
+          "target_error_code": null,
+          "target_authorization_failure": false
+        }
+      },
+      {
+        "label": "D-x",
+        "service": "s3",
+        "operation": "s3:GetObject",
+        "principal_type": "iam-user-scoped-allow",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-s3d4566",
+        "target_resource": "arn:aws:s3:::cloudsec-x-4566/*",
+        "expected_aws_outcome": "allow",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "resource_scoping_allow"
+        ],
+        "classification": true,
+        "notes": "in-scope resource"
+      },
+      {
+        "label": "D-y",
+        "service": "s3",
+        "operation": "s3:GetObject",
+        "principal_type": "iam-user-scoped-allow",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-s3d4566",
+        "target_resource": "arn:aws:s3:::cloudsec-y-4566/*",
+        "expected_aws_outcome": "deny",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "resource_scoping_allow"
+        ],
+        "classification": false,
+        "notes": "out-of-scope resource"
+      },
+      {
+        "label": "E-x",
+        "service": "s3",
+        "operation": "s3:GetObject",
+        "principal_type": "iam-user-scoped-deny",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-s3e4566",
+        "target_resource": "arn:aws:s3:::cloudsec-x-4566/*",
+        "expected_aws_outcome": "deny",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "resource_scoping_deny"
+        ],
+        "classification": false,
+        "notes": "resource named by the Deny"
+      },
+      {
+        "label": "E-y",
+        "service": "s3",
+        "operation": "s3:GetObject",
+        "principal_type": "iam-user-scoped-deny",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-s3e4566",
+        "target_resource": "arn:aws:s3:::cloudsec-y-4566/*",
+        "expected_aws_outcome": "allow",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "resource_scoping_deny"
+        ],
+        "classification": true,
+        "notes": "resource not named by the Deny"
+      },
+      {
+        "label": "S3-BP",
+        "service": "s3",
+        "operation": "s3:GetObject",
+        "principal_type": "iam-user-with-bucket-policy-deny",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-s3bp4566",
+        "target_resource": "arn:aws:s3:::cloudsec-x-4566/*",
+        "expected_aws_outcome": "deny",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "s3_bucket_policy_deny"
+        ],
+        "classification": false,
+        "notes": "bucket policy Deny only; identity policy allows the action"
+      },
+      {
+        "label": "SM-A",
+        "service": "secretsmanager",
+        "operation": "secretsmanager:GetSecretValue",
+        "principal_type": "iam-user",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-secallow4566",
+        "target_resource": "arn:aws:secretsmanager:us-east-1:000000000000:secret:cloudsec-m0-4566-c5b28b96-K5DQZ5",
+        "expected_aws_outcome": "allow",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "secretsmanager_allow"
+        ],
+        "classification": true,
+        "notes": ""
+      },
+      {
+        "label": "SM-B",
+        "service": "secretsmanager",
+        "operation": "secretsmanager:GetSecretValue",
+        "principal_type": "iam-user-no-policy",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-secnone4566",
+        "target_resource": "arn:aws:secretsmanager:us-east-1:000000000000:secret:cloudsec-m0-4566-c5b28b96-K5DQZ5",
+        "expected_aws_outcome": "deny",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "secretsmanager_implicit_deny"
+        ],
+        "classification": false,
+        "notes": ""
+      },
+      {
+        "label": "SM-C",
+        "service": "secretsmanager",
+        "operation": "secretsmanager:GetSecretValue",
+        "principal_type": "iam-user-deny",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-secdeny4566",
+        "target_resource": "arn:aws:secretsmanager:us-east-1:000000000000:secret:cloudsec-m0-4566-c5b28b96-K5DQZ5",
+        "expected_aws_outcome": "deny",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "secretsmanager_deny"
+        ],
+        "classification": false,
+        "notes": ""
+      },
+      {
+        "label": "KMS-C",
+        "service": "kms",
+        "operation": "kms:Decrypt",
+        "principal_type": "iam-user-deny",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-kmsdeny4566",
+        "target_resource": "arn:aws:kms:us-east-1:000000000000:key/7d5a12ff-667b-41aa-91a4-b9bc4d846735",
+        "expected_aws_outcome": "deny",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "kms_deny"
+        ],
+        "classification": false,
+        "notes": ""
+      },
+      {
+        "label": "KMS-KP",
+        "service": "kms",
+        "operation": "kms:Decrypt",
+        "principal_type": "probe-root",
+        "principal": "arn:aws:kms:us-east-1:000000000000:key/7d5a12ff-667b-41aa-91a4-b9bc4d846735",
+        "target_resource": "arn:aws:kms:us-east-1:000000000000:key/7d5a12ff-667b-41aa-91a4-b9bc4d846735",
+        "expected_aws_outcome": "deny",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "kms_key_policy_deny"
+        ],
+        "classification": false,
+        "notes": "key policy Deny vs root caller"
+      },
+      {
+        "label": "CW-C",
+        "service": "logs",
+        "operation": "logs:PutLogEvents",
+        "principal_type": "iam-user-deny",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-logsdeny4566",
+        "target_resource": "arn:aws:logs:us-east-1:000000000000:log-group:cloudsec-probe-group-4566:log-stream:probe",
+        "expected_aws_outcome": "deny",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": true,
+        "policy_confirmed": true,
+        "signals": [
+          "logs_deny"
+        ],
+        "classification": false,
+        "notes": "re-read the group to see whether the denied write landed"
+      },
+      {
+        "label": "CFG-C",
+        "service": "config",
+        "operation": "config:PutEvaluations",
+        "principal_type": "iam-user-deny",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-configdeny4566",
+        "target_resource": "arn:aws:s3:::cloudsec-sts-bucket-4566",
+        "expected_aws_outcome": "deny",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "config_deny"
+        ],
+        "classification": false,
+        "notes": "re-read compliance to see whether the denied submission landed"
+      },
+      {
+        "label": "LM-C",
+        "service": "lambda",
+        "operation": "lambda:GetFunctionConfiguration",
+        "principal_type": "iam-user-deny",
+        "principal": "arn:aws:iam::000000000000:user/cloudsec-lambdadeny4566",
+        "target_resource": "arn:aws:lambda:us-east-1:000000000000:function:cloudsec-probe-fn-4566",
+        "expected_aws_outcome": "deny",
+        "actual_allowed": true,
+        "http_status": null,
+        "exception": null,
+        "error_code": null,
+        "request_id": null,
+        "state_changed": false,
+        "policy_confirmed": true,
+        "signals": [
+          "lambda_deny"
+        ],
+        "classification": false,
+        "notes": ""
+      }
+    ]
+  },
+  "enforcement_by_service": {
+    "s3": {
+      "identity_allow_observed": true,
+      "implicit_deny_observed": false,
+      "explicit_deny_observed": false,
+      "resource_scoping_observed": true
+    },
+    "secretsmanager": {
+      "secretsmanager_allow_observed": true,
+      "secretsmanager_deny_observed": false
+    },
+    "kms": {
+      "kms_deny_observed": false
+    },
+    "cloudwatch_logs": {
+      "logs_deny_observed": false
+    },
+    "config": {
+      "config_deny_observed": false
+    },
+    "lambda": {
+      "lambda_deny_observed": false
+    }
+  }
+}

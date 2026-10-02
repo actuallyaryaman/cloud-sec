@@ -1,0 +1,102 @@
+{
+  "probe_version": 1,
+  "generated_at": "2026-10-02T05:04:56.853613+00:00",
+  "endpoints": {
+    "stock": "http://localhost:4566",
+    "iam-enforced": "http://localhost:4567"
+  },
+  "floci": {
+    "stock": {
+      "version": "2.1.0",
+      "edition": "community",
+      "iam_enforcement_hint": null
+    },
+    "iam-enforced": {
+      "version": "2.1.0",
+      "edition": "community",
+      "iam_enforcement_hint": null
+    }
+  },
+  "iam_enforcement": {
+    "identity_allow_observed": {
+      "stock": true,
+      "iam-enforced": true
+    },
+    "implicit_deny_observed": {
+      "stock": false,
+      "iam-enforced": true
+    },
+    "explicit_deny_observed": {
+      "stock": false,
+      "iam-enforced": true
+    },
+    "resource_scoping_observed": {
+      "stock": false,
+      "iam-enforced": true
+    },
+    "sts_trust_enforcement_observed": {
+      "stock": false,
+      "iam-enforced": true
+    },
+    "sts_role_restrictions_observed": {
+      "stock": false,
+      "iam-enforced": null
+    },
+    "unresolved_action_behavior": {
+      "stock": null,
+      "iam-enforced": false
+    }
+  },
+  "differences": {
+    "implicit_deny_observed": {
+      "stock": false,
+      "iam-enforced": true
+    },
+    "explicit_deny_observed": {
+      "stock": false,
+      "iam-enforced": true
+    },
+    "resource_scoping_observed": {
+      "stock": false,
+      "iam-enforced": true
+    },
+    "sts_trust_enforcement_observed": {
+      "stock": false,
+      "iam-enforced": true
+    },
+    "sts_role_restrictions_observed": {
+      "stock": false,
+      "iam-enforced": null
+    },
+    "unresolved_action_behavior": {
+      "stock": null,
+      "iam-enforced": false
+    }
+  },
+  "important_gaps": {
+    "stock": [
+      "[sts] STS AssumeRole succeeded for a role ARN that was never created; Floci minted credentials for it",
+      "[sts] GetCallerIdentity under assumed-role credentials reported 'arn:aws:sts::000000000000:assumed-role/cloudsec-stsok-4566/floci-session' rather than the ARN returned by AssumeRole ('arn:aws:sts::000000000000:assumed-role/cloudsec-stsok-4566/ok4566')",
+      "[credentials] an unregistered access key was accepted for GetCallerIdentity (None); Floci performed no credential validation",
+      "[credentials] an unregistered access key was accepted for ListBuckets (None); Floci performed no credential validation",
+      "[credentials] an unregistered access key was accepted for ListUsers (None); Floci performed no credential validation",
+      "[credentials] a verified implicit deny was not enforced on this endpoint, so policy evaluation is inactive here and action resolution cannot be assessed",
+      "[s3] S3 bucket-policy Deny was not observed to block GetObject even though the policy was confirmed stored",
+      "[kms] KMS key-policy Deny was not observed to block Decrypt",
+      "[cloudtrail] CloudTrail trail files contained no IAM management events although IncludeManagementEvents was requested"
+    ],
+    "iam-enforced": [
+      "[sts] STS AssumeRole succeeded for a role ARN that was never created; Floci minted credentials for it",
+      "[sts] STS AssumeRole failed for an existing role (AccessDenied). The calling Floci-issued principal carried an inline policy allowing sts:AssumeRole on Resource '*' and the role trusts '*'; no role could be assumed, so the assumed-role matrix is inconclusive here",
+      "[sts] STS AssumeRole failed for the resource-scoped role",
+      "[sts] STS AssumeRole failed for the explicitly-denied role",
+      "[credentials] an unregistered access key was accepted for GetCallerIdentity (None); Floci performed no credential validation",
+      "[credentials] an unregistered access key was accepted for ListBuckets (None); Floci performed no credential validation",
+      "[credentials] an unregistered access key was accepted for ListUsers (None); Floci performed no credential validation",
+      "[credentials] at least one action was allowed despite a verified explicit Deny, which is consistent with Floci's IAM resolver not mapping that action and treating unresolved actions as permitted: lambda:GetFunctionConfiguration",
+      "[s3] S3 bucket-policy Deny was not observed to block GetObject even though the policy was confirmed stored",
+      "[kms] KMS key-policy Deny was not observed to block Decrypt",
+      "[cloudtrail] CloudTrail trail files contained no IAM management events although IncludeManagementEvents was requested"
+    ]
+  }
+}

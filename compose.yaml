@@ -1,0 +1,20 @@
+services:
+  floci:
+    image: floci/floci:2.1.0
+    container_name: cloudsec-floci-stock
+    ports:
+      - "4566:4566"
+    user: root
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  floci-enforced:
+    image: floci/floci:2.1.0
+    container_name: cloudsec-floci-enforced
+    ports:
+      - "4567:4566"
+    user: root
+    environment:
+      FLOCI_SERVICES_IAM_ENFORCEMENT_ENABLED: "true"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
