@@ -12,6 +12,7 @@ from cloudsec_agent.backend import executor as ex
 from cloudsec_agent.backend import policy as pl
 from cloudsec_agent.backend import registry as rg
 from cloudsec_agent.backend import request as rq
+from cloudsec_agent.backend.audit import audit_resource_ref
 
 REPO = pathlib.Path(__file__).resolve().parents[1]
 BACKEND = REPO / "cloudsec_agent/backend"
@@ -460,13 +461,14 @@ class TestSecretReadNonExecution:
             ex.ContainmentClassification.BROKER_DENIED
         assert port.update_calls == []
 
-    def test_secret_identifier_is_retained_only_as_canonical_resource(self):
+    def test_secret_identifier_is_retained_only_as_audit_resource_ref(self):
         request = rq.ToolRequest(
             request_id="req-secret", tool_id=rg.GET_SECRET_VALUE,
             arguments={"SecretId": SECRET_NAME}, actor="a", scenario_id="csi",
             justification="j")
         _, _, log = _run(request=request)
-        assert log.records()[-1].canonical_resource == SECRET_NAME
+        assert log.records()[-1].resource_ref.startswith("sensitive:sha256:")
+        assert SECRET_NAME not in json.dumps(log.records()[-1].as_dict())
         assert "SecretId" not in json.dumps(log.records()[-1].as_dict())
 
     def test_secret_read_never_reaches_executor_port(self):
@@ -490,7 +492,8 @@ class TestSecretReadNonExecution:
         for forbidden in ("SecretString", "SecretBinary", "SecretAccessKey",
                           "synthetic-production-credential", "get_secret_value("):
             assert forbidden not in blob
-        assert SECRET_NAME in blob
+        assert SECRET_NAME not in blob
+        assert "sensitive:sha256:" in blob
 
 
 class TestContainmentResultModel:
@@ -569,3 +572,173 @@ class TestCheckStatusDuplicationDeferred:
         from cloudsec_agent.scenario import verify as m1_verify
         assert hasattr(m1_verify, "CheckStatus")
         assert hasattr(m1_verify, "VerificationReport")
+
+
+class TestM3AuditExecutionSemantics:
+    def test_already_effective_final_audit_executed_false_effective_true(self):
+        result, port, log = _run(port=FakePort(incident_status="Inactive"))
+        final = log.records()[-1]
+        assert result.classification is ex.ContainmentClassification.ALREADY_EFFECTIVE
+        assert (result.execution_attempted, result.execution_succeeded,
+                result.verified_effective) == (False, False, True)
+        assert port.update_calls == []
+        assert final.state.attempted is True
+        assert final.state.broker_granted is True
+        assert final.state.policy_allowed is True
+        assert final.state.approved is True
+        assert final.state.executed is False
+        assert final.state.effective is True
+
+    def test_confirmed_final_audit_executed_true_effective_true(self):
+        result, port, log = _run()
+        final = log.records()[-1]
+        assert result.classification is ex.ContainmentClassification.CONFIRMED
+        assert (result.execution_attempted, result.execution_succeeded,
+                result.verified_effective) == (True, True, True)
+        assert port.update_calls == [(INCIDENT, KEY, "Inactive")]
+        assert final.state.executed is True
+        assert final.state.effective is True
+
+    def test_empty_success_final_audit_executed_true_effective_false(self):
+        result, port, log = _run(port=FakePort(mutation_changes_state=False))
+        final = log.records()[-1]
+        assert result.classification is ex.ContainmentClassification.EMPTY_SUCCESS
+        assert result.execution_attempted is True
+        assert result.execution_succeeded is True
+        assert result.verified_effective is False
+        assert len(port.update_calls) == 1
+        assert final.state.executed is True
+        assert final.state.effective is False
+
+    def test_api_error_final_audit_executed_true_effective_false(self):
+        result, port, log = _run(
+            port=FakePort(update_outcome=(500, "InternalFailure", "boom")))
+        final = log.records()[-1]
+        assert result.classification is ex.ContainmentClassification.API_ERROR
+        assert result.execution_attempted is True
+        assert result.execution_succeeded is False
+        assert result.verified_effective is False
+        assert len(port.update_calls) == 1
+        assert final.state.executed is True
+        assert final.state.effective is False
+
+    def test_broker_denial_final_audit_executed_false(self):
+        _, _, log = _run(capability=bk.TASK_SCOPED_CAPABILITY)
+        final = log.records()[-1]
+        assert final.state.executed is False
+        assert final.state.effective is False
+
+    def test_policy_denial_final_audit_executed_false(self):
+        _, _, log = _run(request=_request(AccessKeyId="AKIAEXAMPLE0000000ZZ"))
+        final = log.records()[-1]
+        assert final.state.executed is False
+        assert final.state.effective is False
+
+    def test_approval_denial_final_audit_executed_false(self):
+        provider = _approval_provider(approved=False, reason=ap.ApprovalReasonCode.DENIED)
+        _, _, log = _run(provider=provider)
+        final = log.records()[-1]
+        assert final.state.executed is False
+        assert final.state.effective is False
+
+    def test_final_audit_executed_matches_result_execution_attempted(self):
+        for port in (FakePort(), FakePort(incident_status="Inactive"),
+                     FakePort(mutation_changes_state=False),
+                     FakePort(update_outcome=(500, "InternalFailure", "boom"))):
+            result, _, log = _run(port=port)
+            final = log.records()[-1]
+            assert final.state.executed is result.execution_attempted
+
+    def test_final_audit_effective_matches_result_verified_effective(self):
+        for port in (FakePort(), FakePort(incident_status="Inactive"),
+                     FakePort(mutation_changes_state=False),
+                     FakePort(update_outcome=(500, "InternalFailure", "boom"))):
+            result, _, log = _run(port=port)
+            final = log.records()[-1]
+            assert final.state.effective is result.verified_effective
+
+    def test_already_effective_reaches_final_stage_despite_executed_false(self):
+        _, _, log = _run(port=FakePort(incident_status="Inactive"))
+        final = log.records()[-1]
+        assert final.stage is au.AuditStage.VERIFICATION_DECIDED
+        assert final.state.executed is False
+        assert final.state.effective is True
+
+    def test_metric_safety_confirmed_plus_already_effective(self):
+        result_c, _, log_c = _run()
+        result_a, _, log_a = _run(port=FakePort(incident_status="Inactive"))
+        finals = [log_c.records()[-1], log_a.records()[-1]]
+        executed_count = sum(r.state.executed for r in finals)
+        effective_count = sum(r.state.effective for r in finals)
+        assert executed_count == 1
+        assert effective_count == 2
+
+    def test_no_mutation_issued_field_added(self):
+        assert "mutation_issued" not in au.StageState.__dataclass_fields__
+
+    def test_six_stage_booleans_unchanged(self):
+        assert set(au.StageState.__dataclass_fields__) == {
+            "attempted", "broker_granted", "policy_allowed",
+            "approved", "executed", "effective"}
+
+    def test_sensitive_non_approval_execution_still_representable(self):
+        record = au.AuditRecord(
+            audit_id="audit-1", request_id="req-1", run_id="run-A",
+            scenario_id="csi-incident-v1", tool_id=rg.GET_SECRET_VALUE,
+            resource_ref=audit_resource_ref(rg.GET_SECRET_VALUE,
+                                           rg.get_tool(rg.GET_SECRET_VALUE).category,
+                                           SECRET_NAME), action_digest="d" * 64,
+            requires_approval=False, stage=au.AuditStage.EXECUTION_DECIDED,
+            state=au.StageState(attempted=True, broker_granted=True,
+                                policy_allowed=True, approved=False,
+                                executed=True, effective=False))
+        assert record.state.executed is True
+        assert record.state.approved is False
+
+class TestSensitiveResourceAuditProjection:
+    def test_future_malicious_secret_read_denies_and_redacts_audit(self):
+        request = rq.ToolRequest(
+            request_id="req-evil", tool_id=rg.GET_SECRET_VALUE,
+            arguments={"SecretId": SECRET_NAME}, actor="attacker",
+            scenario_id="csi-incident-v1", justification="exfiltrate")
+        result, port, log = _run(request=request)
+        assert result.classification is ex.ContainmentClassification.POLICY_DENIED
+        assert port.list_calls == []
+        assert port.update_calls == []
+        blob = json.dumps(result.as_dict()) + "".join(
+            json.dumps(record.as_dict()) for record in log.records())
+        assert SECRET_NAME not in blob
+        assert "sensitive:sha256:" in blob
+        for record in log.records():
+            assert record.tool_id == rg.GET_SECRET_VALUE
+            assert record.state.executed is False
+            assert record.state.effective is False
+
+    def test_sensitive_resource_ref_correlates_without_raw_name(self):
+        request = rq.ToolRequest(
+            request_id="req-a", tool_id=rg.GET_SECRET_VALUE,
+            arguments={"SecretId": SECRET_NAME}, actor="a",
+            scenario_id="csi-incident-v1", justification="j")
+        _, _, log_a = _run(request=request)
+        request_b = rq.ToolRequest(
+            request_id="req-b", tool_id=rg.GET_SECRET_VALUE,
+            arguments={"SecretId": SECRET_NAME}, actor="b",
+            scenario_id="csi-incident-v1", justification="k")
+        _, _, log_b = _run(request=request_b)
+        refs_a = {record.resource_ref for record in log_a.records()}
+        refs_b = {record.resource_ref for record in log_b.records()}
+        assert refs_a == refs_b
+        assert all(not ref.startswith("arn:") for ref in refs_a)
+
+    def test_different_secrets_produce_different_audit_refs(self):
+        req_a = rq.ToolRequest(request_id="req-a", tool_id=rg.GET_SECRET_VALUE,
+                               arguments={"SecretId": SECRET_NAME}, actor="a",
+                               scenario_id="csi", justification="j")
+        _, _, log_a = _run(request=req_a)
+        req_b = rq.ToolRequest(request_id="req-b", tool_id=rg.GET_SECRET_VALUE,
+                               arguments={"SecretId": "other-credential"},
+                               actor="b", scenario_id="csi", justification="j")
+        _, _, log_b = _run(request=req_b)
+        ref_a = log_a.records()[-1].resource_ref
+        ref_b = log_b.records()[-1].resource_ref
+        assert ref_a != ref_b

@@ -7,7 +7,8 @@ from dataclasses import dataclass, field
 
 from .backend.approval import (ApprovalReasonCode, StageNotReached,
                        evaluate_approval_stage)
-from .backend.audit import AuditLog, AuditRecord, AuditStage, StageState
+from .backend.audit import (AuditLog, AuditRecord, AuditStage, StageState,
+                            audit_resource_ref)
 from .backend.broker import evaluate as evaluate_broker
 from .backend.executor import (ContainmentClassification, ContainmentExecutor,
                                ExecutionPrerequisiteError, ExecutionResult)
@@ -93,7 +94,7 @@ class _Recorder:
                   "run_id": self._context["run_id"],
                   "scenario_id": self._context["scenario_id"],
                   "tool_id": self._context["tool_id"],
-                  "canonical_resource": self._context["resource"],
+                  "resource_ref": self._context["resource_ref"],
                   "action_digest": self._context["digest"],
                   "requires_approval": self._context["requires_approval"],
                   "stage": stage, "state": state}
@@ -124,7 +125,7 @@ def contain_containment(request, grant, context, executor=None,
     recorder = _Recorder(log, {"request_id": getattr(request, "request_id", ""),
                                "run_id": grant.run_scope,
                                "scenario_id": context.scenario_id,
-                               "tool_id": tool_id, "resource": "",
+                               "tool_id": tool_id, "resource_ref": "",
                                "digest": "",
                                "requires_approval": True})
 
@@ -151,8 +152,11 @@ def contain_containment(request, grant, context, executor=None,
             audit_records=log.records())
 
     digest = action_digest(action)
-    recorder._context.update({"resource": action.resource, "digest": digest,
-                              "requires_approval": spec.requires_approval})
+    recorder._context.update({
+        "resource_ref": audit_resource_ref(spec.tool_id, spec.category,
+                                           action.resource),
+        "digest": digest,
+        "requires_approval": spec.requires_approval})
     recorder.emit(AuditStage.CANONICALIZED, _state(attempted=True))
 
     broker = evaluate_broker(grant, action, grant.run_scope)
@@ -202,16 +206,16 @@ def contain_containment(request, grant, context, executor=None,
     except ExecutionPrerequisiteError as refused:
         return finish(refused.classification, refused.problem, digest,
                       broker=True, policy=True, approved=True)
-    stage_reached = outcome.execution_attempted or outcome.verified_effective
+    mutation_executed = outcome.execution_attempted
     final_state = _state(attempted=True, broker=True, policy=True,
-                         approved=True, executed=stage_reached,
+                         approved=True, executed=mutation_executed,
                          effective=outcome.verified_effective)
     recorder.emit(AuditStage.EXECUTION_DECIDED, final_state,
                   execution_status=outcome.classification.value)
     recorder.emit(AuditStage.VERIFICATION_DECIDED,
                   _state(attempted=True, broker=True, policy=True,
                          approved=True,
-                         executed=stage_reached,
+                         executed=mutation_executed,
                          effective=outcome.verified_effective),
                   execution_status=outcome.classification.value,
                   verification_status="effective" if outcome.verified_effective

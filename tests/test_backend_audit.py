@@ -9,6 +9,7 @@ from cloudsec_agent.backend import audit as au
 from cloudsec_agent.backend import policy as pl
 from cloudsec_agent.backend import registry as rg
 from cloudsec_agent.backend import request as rq
+from cloudsec_agent.backend.audit import audit_resource_ref
 
 REPO = pathlib.Path(__file__).resolve().parents[1]
 BACKEND = REPO / "cloudsec_agent/backend"
@@ -28,10 +29,17 @@ def _state(**overrides):
 
 def _record(stage=au.AuditStage.POLICY_DECIDED, state=None,
             requires_approval=True, tool_id=rg.UPDATE_ACCESS_KEY,
-            action_digest="d" * 64, **overrides):
+            action_digest="d" * 64, canonical_resource=INCIDENT_ARN,
+            **overrides):
+    try:
+        category = rg.get_tool(tool_id).category
+    except Exception:
+        category = rg.Category.READ_ONLY
     fields = {"audit_id": "audit-1", "request_id": "req-1", "run_id": "run-A",
               "scenario_id": "csi-incident-v1", "tool_id": tool_id,
-              "canonical_resource": INCIDENT_ARN, "action_digest": action_digest,
+              "resource_ref": audit_resource_ref(
+                  tool_id, category, canonical_resource),
+              "action_digest": action_digest,
               "requires_approval": requires_approval, "stage": stage,
               "state": state or _state()}
     fields.update(overrides)
@@ -76,8 +84,8 @@ class TestAuditRecordModel:
         assert _record(action_digest="a" * 64).as_dict()["action_digest"] == \
             "a" * 64
 
-    def test_audit_record_contains_canonical_resource(self):
-        assert _record().as_dict()["canonical_resource"] == INCIDENT_ARN
+    def test_audit_record_contains_resource_ref(self):
+        assert _record().as_dict()["resource_ref"] == INCIDENT_ARN
 
     def test_audit_record_does_not_contain_access_key_argument(self):
         blob = json.dumps(_record().as_dict())
@@ -117,6 +125,8 @@ class TestAuditRecordModel:
                      "tool_id", "action_digest"):
             with pytest.raises(TypeError):
                 _record(**{name: ""})
+        with pytest.raises(TypeError):
+            _record(resource_ref="")
 
 
 class TestAuditSafetyDenylist:
@@ -141,7 +151,7 @@ class TestAuditSafetyDenylist:
 
     @pytest.mark.parametrize("name", [
         "audit_id", "request_id", "run_id", "scenario_id", "tool_id",
-        "canonical_resource", "action_digest", "broker_reason_code",
+        "resource_ref", "action_digest", "broker_reason_code",
         "policy_reason_code", "approval_reason_code", "execution_status",
         "verification_status", "rule_id", "timestamp", "requires_approval",
         "stage"])
@@ -177,11 +187,23 @@ class TestAuditSafetyDenylist:
 
 
 class TestAuditTransitionInvariants:
-    def test_effective_requires_executed(self):
+    def test_effective_no_longer_requires_executed(self):
+        record = _record(stage=au.AuditStage.VERIFICATION_DECIDED,
+                         state=_state(broker_granted=True, policy_allowed=True,
+                                      approved=True, executed=False,
+                                      effective=True))
+        assert record.state.effective is True
+        assert record.state.executed is False
+
+    def test_executed_requires_attempted(self):
         with pytest.raises(au.AuditTransitionError):
-            _record(state=_state(broker_granted=True, policy_allowed=True,
-                                 approved=True, executed=False,
-                                 effective=True))
+            _record(state=_state(attempted=False, executed=True))
+
+    def test_executed_requires_policy_allowed(self):
+        with pytest.raises(au.AuditTransitionError):
+            _record(state=_state(attempted=True, broker_granted=True,
+                                 policy_allowed=False, approved=True,
+                                 executed=True))
 
     def test_approval_required_execution_requires_approved(self):
         with pytest.raises(au.AuditTransitionError):
@@ -211,7 +233,7 @@ class TestAuditTransitionInvariants:
     def test_transition_error_names_stage_and_problem(self):
         with pytest.raises(au.AuditTransitionError) as exc:
             _record(state=_state(broker_granted=True, policy_allowed=True,
-                                 approved=True, effective=True))
+                                 approved=False, executed=True))
         assert exc.value.stage is au.AuditStage.POLICY_DECIDED
         assert "executed" in exc.value.problem
 
@@ -303,13 +325,13 @@ class TestContainmentStageScenarios:
                          verification_status="confirmed")
         assert record.state.effective is True
 
-    def test_effective_without_executed_is_structurally_impossible(self):
-        with pytest.raises(au.AuditTransitionError) as exc:
-            _record(stage=au.AuditStage.VERIFICATION_DECIDED,
-                    state=_state(attempted=True, broker_granted=True,
-                                 policy_allowed=True, approved=True,
-                                 executed=False, effective=True))
-        assert "effective requires executed" in exc.value.problem
+    def test_effective_without_executed_is_valid(self):
+        record = _record(stage=au.AuditStage.VERIFICATION_DECIDED,
+                         state=_state(attempted=True, broker_granted=True,
+                                      policy_allowed=True, approved=True,
+                                      executed=False, effective=True))
+        assert record.state.effective is True
+        assert record.state.executed is False
 
 
 class TestSecretReadAuditSemantics:
@@ -486,3 +508,72 @@ class TestSecretReadMetricNamesRemainAvailable:
         source = (BACKEND / "audit.py").read_text()
         assert "secret_read_requested" not in source
         assert "secret_value_returned" not in source
+class TestResourceRefFingerprint:
+    RAW_SECRET = "csi-db-production-credential"
+
+    def test_same_tool_resource_deterministic(self):
+        a = au.audit_resource_ref(rg.GET_SECRET_VALUE,
+                                  rg.Category.SENSITIVE_READ, self.RAW_SECRET)
+        b = au.audit_resource_ref(rg.GET_SECRET_VALUE,
+                                  rg.Category.SENSITIVE_READ, self.RAW_SECRET)
+        assert a == b
+
+    def test_different_resource_different_ref(self):
+        a = au.audit_resource_ref(rg.GET_SECRET_VALUE,
+                                  rg.Category.SENSITIVE_READ, self.RAW_SECRET)
+        b = au.audit_resource_ref(rg.GET_SECRET_VALUE,
+                                  rg.Category.SENSITIVE_READ,
+                                  "other-production-credential")
+        assert a != b
+
+    def test_same_resource_different_tool_different_ref(self):
+        a = au.audit_resource_ref("get_secret_value",
+                                  rg.Category.SENSITIVE_READ, self.RAW_SECRET)
+        b = au.audit_resource_ref("another_secret_tool",
+                                  rg.Category.SENSITIVE_READ, self.RAW_SECRET)
+        assert a != b
+
+    def test_fingerprint_has_expected_shape(self):
+        ref = au.audit_resource_ref(rg.GET_SECRET_VALUE,
+                                    rg.Category.SENSITIVE_READ, self.RAW_SECRET)
+        assert ref.startswith("sensitive:sha256:")
+        digest = ref.split(":", 2)[2]
+        assert len(digest) == 64
+        assert digest == digest.lower()
+        assert all(ch in "0123456789abcdef" for ch in digest)
+
+    def test_fingerprint_uses_declared_domain_prefix(self):
+        source = (BACKEND / "audit.py").read_text()
+        assert "cloudsec-audit-resource-v1" in source
+
+    def test_no_raw_resource_in_fingerprint(self):
+        ref = au.audit_resource_ref(rg.GET_SECRET_VALUE,
+                                    rg.Category.SENSITIVE_READ, self.RAW_SECRET)
+        assert self.RAW_SECRET not in ref
+
+    def test_non_sensitive_resource_remains_canonical(self):
+        ref = au.audit_resource_ref(rg.UPDATE_ACCESS_KEY,
+                                    rg.Category.STATE_CHANGING, INCIDENT_ARN)
+        assert ref == INCIDENT_ARN
+
+    def test_audit_record_for_sensitive_tool_stores_fingerprint(self):
+        record = _record(tool_id=rg.GET_SECRET_VALUE, requires_approval=False,
+                         canonical_resource=self.RAW_SECRET,
+                         state=_state(attempted=True, broker_granted=True,
+                                      policy_allowed=False))
+        assert record.resource_ref.startswith("sensitive:sha256:")
+        assert self.RAW_SECRET not in json.dumps(record.as_dict())
+
+    def test_audit_record_for_state_changing_keeps_canonical_resource(self):
+        record = _record()
+        assert record.resource_ref == INCIDENT_ARN
+
+    def test_serialized_audit_contains_tool_id_and_digest(self):
+        record = _record()
+        blob = json.dumps(record.as_dict())
+        assert rg.UPDATE_ACCESS_KEY in blob
+        assert '"action_digest"' in blob
+
+    def test_audit_record_field_is_resource_ref_not_canonical_resource(self):
+        assert "resource_ref" in au.AuditRecord.__dataclass_fields__
+        assert "canonical_resource" not in au.AuditRecord.__dataclass_fields__

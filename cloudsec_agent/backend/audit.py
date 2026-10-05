@@ -12,6 +12,11 @@ __all__ = [
 
 from dataclasses import dataclass
 from enum import Enum
+import hashlib
+
+from .registry import Category, get_tool
+
+_SENSITIVE_READ_TAG = "sensitive:sha256:"
 
 FORBIDDEN_FIELD_NAMES = frozenset({
     "secretaccesskey", "sessiontoken", "secretstring", "secretbinary",
@@ -58,6 +63,22 @@ def safe_field_names(names) -> tuple:
     return tuple(sorted(names))
 
 
+def _fingerprint_sensitive_resource(tool_id: str,
+                                    canonical_resource: str) -> str:
+    payload = b"cloudsec-audit-resource-v1\0"
+    payload += tool_id.encode("utf-8")
+    payload += b"\0"
+    payload += canonical_resource.encode("utf-8")
+    return _SENSITIVE_READ_TAG + hashlib.sha256(payload).hexdigest()
+
+
+def audit_resource_ref(tool_id: str, category: Category,
+                       canonical_resource: str) -> str:
+    if category is Category.SENSITIVE_READ:
+        return _fingerprint_sensitive_resource(tool_id, canonical_resource)
+    return canonical_resource
+
+
 class AuditStage(str, Enum):
     REQUEST_VALIDATED = "request_validated"
     CANONICALIZED = "canonicalized"
@@ -95,8 +116,10 @@ def _check_transitions(stage, attempted, broker_granted, policy_allowed,
     def fail(message):
         raise AuditTransitionError(stage, message)
 
-    if effective and not executed:
-        fail("effective requires executed")
+    if executed and not attempted:
+        fail("executed requires attempted")
+    if executed and not policy_allowed:
+        fail("executed requires policy_allowed")
     if requires_approval and executed and not approved:
         fail("executed requires approved when approval is required")
     if approved and not policy_allowed:
@@ -114,7 +137,7 @@ class AuditRecord:
     run_id: str
     scenario_id: str
     tool_id: str
-    canonical_resource: str
+    resource_ref: str
     action_digest: str
     requires_approval: bool
     stage: AuditStage
@@ -134,10 +157,13 @@ class AuditRecord:
         if not isinstance(self.state, StageState):
             raise TypeError("state must be a StageState")
         for name in ("audit_id", "request_id", "run_id", "scenario_id",
-                     "tool_id", "action_digest"):
+                     "tool_id", "action_digest", "resource_ref"):
             value = getattr(self, name)
             if not isinstance(value, str) or not value:
                 raise TypeError(f"{name} must be a non-empty string")
+        spec = get_tool(self.tool_id)
+        if spec.category is Category.SENSITIVE_READ and not self.resource_ref.startswith(_SENSITIVE_READ_TAG):
+            raise ValueError("sensitive resource_ref must use fingerprint form")
         if not isinstance(self.requires_approval, bool):
             raise TypeError("requires_approval must be a bool")
         _check_transitions(self.stage, self.state.attempted,
@@ -149,7 +175,7 @@ class AuditRecord:
         payload = {"audit_id": self.audit_id, "request_id": self.request_id,
                    "run_id": self.run_id, "scenario_id": self.scenario_id,
                    "tool_id": self.tool_id,
-                   "canonical_resource": self.canonical_resource,
+                   "resource_ref": self.resource_ref,
                    "action_digest": self.action_digest,
                    "requires_approval": self.requires_approval,
                    "stage": self.stage.value,
