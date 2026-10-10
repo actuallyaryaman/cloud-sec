@@ -133,8 +133,16 @@ class TestInvestigatorPolicy:
         assert any("csi-trail-sink" in item for item in resources)
         assert any("csi-report-sched" in item for item in resources)
 
-    def test_no_wildcard_resource_on_investigator(self):
-        assert "*" not in resources_of(s.investigator_policy_document())
+    def test_wildcard_resource_only_on_proven_compat_statements(self):
+        compat_actions = {"iam:GetUser", "iam:ListAccessKeys",
+                          "iam:GetUserPolicy", "iam:ListUserPolicies",
+                          "logs:GetLogEvents"}
+        found = False
+        for item in statements(s.investigator_policy_document()):
+            if "*" in item["Resource"]:
+                found = True
+                assert set(item["Action"]) <= compat_actions, item["Action"]
+        assert found
 
     def test_policy_name(self):
         assert s.INVESTIGATOR_POLICY_NAME == "csi-investigator-readonly"

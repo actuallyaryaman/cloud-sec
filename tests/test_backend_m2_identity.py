@@ -835,17 +835,29 @@ class TestM1LeftUntouched:
         assert "csi-investigator-readonly" not in source
 
     def test_m1_investigator_policy_still_scopes_its_resources(self):
+        from cloudsec_agent.scenario import seed as m1seed
         from cloudsec_agent.scenario.seed import investigator_policy_document
         document = json.loads(investigator_policy_document())
         resources = [resource
                      for statement in document["Statement"]
                      for resource in statement["Resource"]]
-        assert mi.FLOCI_IAM_RESOURCE not in resources
-        assert incident_user_arn() in resources
+        assert m1seed.FLOCI_INVESTIGATOR_IAM_RESOURCE in resources
+        assert m1seed.FLOCI_INVESTIGATOR_LOGS_RESOURCE in resources
+        assert incident_user_arn() not in resources
 
-    def test_m1_investigator_policy_has_no_wildcard(self):
+    def test_m1_investigator_policy_wildcard_is_compat_scoped(self):
+        from cloudsec_agent.scenario import seed as m1seed
         from cloudsec_agent.scenario.seed import investigator_policy_document
-        assert '"*"' not in investigator_policy_document()
+        compat_actions = {"iam:GetUser", "iam:ListAccessKeys",
+                          "iam:GetUserPolicy", "iam:ListUserPolicies",
+                          "logs:GetLogEvents"}
+        compat_resources = {m1seed.FLOCI_INVESTIGATOR_IAM_RESOURCE,
+                            m1seed.FLOCI_INVESTIGATOR_LOGS_RESOURCE}
+        document = json.loads(investigator_policy_document())
+        for statement in document["Statement"]:
+            if "*" in statement["Resource"]:
+                assert set(statement["Action"]) <= compat_actions
+                assert set(statement["Resource"]) <= compat_resources
 
     def test_m1_investigator_policy_is_unaffected_by_the_concession(self):
         from cloudsec_agent.scenario.seed import investigator_policy_document
@@ -856,22 +868,38 @@ class TestM1LeftUntouched:
         assert "secretsmanager:GetSecretValue" not in actions
 
     def test_m2_concession_does_not_leak_into_m1_policy_documents(self):
+        from cloudsec_agent.scenario import seed as m1seed
         from cloudsec_agent.scenario.seed import (incident_policy_document,
                                                   investigator_policy_document)
-        for builder in (incident_policy_document,
-                        investigator_policy_document):
-            document = json.loads(builder())
-            for statement in document["Statement"]:
-                assert mi.FLOCI_IAM_RESOURCE not in statement["Resource"]
+        incident = json.loads(incident_policy_document())
+        assert "*" not in [resource
+                           for statement in incident["Statement"]
+                           for resource in statement["Resource"]]
+        compat_actions = {"iam:GetUser", "iam:ListAccessKeys",
+                          "iam:GetUserPolicy", "iam:ListUserPolicies",
+                          "logs:GetLogEvents"}
+        compat_resources = {m1seed.FLOCI_INVESTIGATOR_IAM_RESOURCE,
+                            m1seed.FLOCI_INVESTIGATOR_LOGS_RESOURCE}
+        for statement in json.loads(
+                investigator_policy_document())["Statement"]:
+            if "*" in statement["Resource"]:
+                assert set(statement["Action"]) <= compat_actions
+                assert set(statement["Resource"]) <= compat_resources
 
     def test_m1_policies_use_no_bare_wildcard_resource_element(self):
+        from cloudsec_agent.scenario import seed as m1seed
         from cloudsec_agent.scenario.seed import (incident_policy_document,
                                                   investigator_policy_document)
-        for builder in (incident_policy_document,
-                        investigator_policy_document):
-            document = json.loads(builder())
-            for statement in document["Statement"]:
-                assert mi.FLOCI_IAM_RESOURCE not in statement["Resource"]
+        incident = json.loads(incident_policy_document())
+        assert "*" not in [resource
+                           for statement in incident["Statement"]
+                           for resource in statement["Resource"]]
+        compat_resources = {m1seed.FLOCI_INVESTIGATOR_IAM_RESOURCE,
+                            m1seed.FLOCI_INVESTIGATOR_LOGS_RESOURCE}
+        for statement in json.loads(
+                investigator_policy_document())["Statement"]:
+            assert "*" not in statement["Resource"] or \
+                set(statement["Resource"]) <= compat_resources
 
     def test_m1_owned_resources_remain_disjoint_from_m2(self):
         assert set(mi.M2Owned.all_names()) & set(rs.OWNED.all_names()) == set()

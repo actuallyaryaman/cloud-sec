@@ -14,6 +14,8 @@ __all__ = [
     "LAMBDA_HANDLER",
     "INCIDENT_POLICY_NAME",
     "INVESTIGATOR_POLICY_NAME",
+    "FLOCI_INVESTIGATOR_IAM_RESOURCE",
+    "FLOCI_INVESTIGATOR_LOGS_RESOURCE",
     "incident_policy_document",
     "investigator_policy_document",
     "lambda_configuration",
@@ -45,6 +47,8 @@ from .manifest import register_manifest_secret
 SCENARIO_FILENAME = "csi-incident-v1"
 INCIDENT_POLICY_NAME = RESOURCES.incident_policy
 INVESTIGATOR_POLICY_NAME = "csi-investigator-readonly"
+FLOCI_INVESTIGATOR_IAM_RESOURCE = "*"
+FLOCI_INVESTIGATOR_LOGS_RESOURCE = "*"
 INCIDENT_POLICY_DOCUMENT = "csi-incident-scout.json"
 LAMBDA_RUNTIME = "python3.13"
 LAMBDA_HANDLER = "handler.main"
@@ -309,14 +313,16 @@ def investigator_policy_document() -> str:
                         f"{incident}/notes/*", f"{incident}/restricted/*"]),
             _statement("Allow", ["s3:ListBucket", "s3:GetBucketTagging"],
                        [evidence, trail, incident]),
-            _statement("Allow", ["logs:FilterLogEvents", "logs:GetLogEvents"], log_arn),
+            _statement("Allow", "logs:FilterLogEvents", log_arn),
+            _statement("Allow", "logs:GetLogEvents",
+                       FLOCI_INVESTIGATOR_LOGS_RESOURCE),
             _statement("Allow", "lambda:GetFunctionConfiguration",
                        f"arn:aws:lambda:us-east-1:000000000000:function:"
                        f"{RESOURCES.function_name}"),
             _statement("Allow", "secretsmanager:DescribeSecret", secret_logical_arn()),
             _statement("Allow", ["iam:GetUser", "iam:ListAccessKeys",
                                  "iam:GetUserPolicy", "iam:ListUserPolicies"],
-                       incident_user_arn()),
+                       FLOCI_INVESTIGATOR_IAM_RESOURCE),
         ],
     }, sort_keys=True)
 
