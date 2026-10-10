@@ -106,6 +106,8 @@ class TestAgentEvents:
         assert {item.value for item in ev.AgentEventKind} == {
             "RUN_STARTED", "MODEL_TURN_STARTED", "TOOL_REQUESTED",
             "TOOL_RESULT", "FINDING_UPDATED", "ACTION_PROPOSED",
+            "CONTAINMENT_SUBMITTED", "CONTAINMENT_APPROVAL_REQUIRED",
+            "CONTAINMENT_APPROVED", "CONTAINMENT_RESULT",
             "RUN_COMPLETED", "RUN_STOPPED"}
 
     def test_event_carries_safe_payload_only(self):
