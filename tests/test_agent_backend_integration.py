@@ -209,6 +209,7 @@ class TestCanonicalResourcesPinnedToGrant:
                                  "logStreamName": d.RESOURCES.log_stream}),
         ("lambda_get_function_configuration",
          {"FunctionName": d.RESOURCES.function_name}),
+        ("iam_list_users", {}),
     ])
     def test_canonical_resource_is_granted(self, tool_id, arguments):
         resource = canonical_read_resource(tool_id, arguments)
@@ -217,4 +218,4 @@ class TestCanonicalResourcesPinnedToGrant:
     def test_grant_covers_only_reads(self):
         assert "update_access_key" not in TASK_SCOPED_CAPABILITY.tool_ids
         assert "get_secret_value" not in TASK_SCOPED_CAPABILITY.tool_ids
-        assert len(TASK_SCOPED_CAPABILITY.tool_ids) == 9
+        assert len(TASK_SCOPED_CAPABILITY.tool_ids) == 10

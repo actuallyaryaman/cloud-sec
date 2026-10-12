@@ -22,6 +22,7 @@ READ_METHODS = {
     "iam_list_access_keys": "list_access_keys",
     "iam_get_user_policy": "get_user_policy",
     "iam_list_user_policies": "list_user_policies",
+    "iam_list_users": "list_users",
     "secrets_describe_secret": "describe_secret",
     "logs_get_log_events": "get_log_events",
     "lambda_get_function_configuration": "get_function_configuration",
@@ -43,6 +44,8 @@ def canonical_read_resource(tool_id, arguments):
                    "iam_get_user_policy", "iam_list_user_policies"):
         return incident_user_arn().rsplit("/", 1)[0] + \
             f"/{arguments['UserName']}"
+    if tool_id == "iam_list_users":
+        return incident_user_arn().rsplit("/", 1)[0]
     if tool_id == "secrets_describe_secret":
         return arguments["SecretId"]
     if tool_id == "logs_get_log_events":
@@ -258,6 +261,8 @@ def _read_kwargs(tool_id, validated):
     if tool_id in ("iam_get_user", "iam_list_access_keys",
                    "iam_list_user_policies"):
         return {"user_name": validated["UserName"]}
+    if tool_id == "iam_list_users":
+        return {}
     if tool_id == "iam_get_user_policy":
         return {"user_name": validated["UserName"],
                 "policy_name": validated["PolicyName"]}

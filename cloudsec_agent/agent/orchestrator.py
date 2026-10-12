@@ -213,6 +213,9 @@ class AgentOrchestrator:
                     return stop(InvestigationStatus.LIMIT_REACHED,
                                 "identical_request_repeat_limit")
                 repeat_counts[key] = seen + 1
+                repeat_count = seen + 1
+                repeat_will_stop = repeat_count >= \
+                    limits.max_identical_request_repeats
                 request_id = f"{run_id}:req:{tool_call_count:04d}"
                 justification = (call.justification or "")[
                     :limits.max_justification_chars]
@@ -250,7 +253,8 @@ class AgentOrchestrator:
                     tool_id=call.tool_id, ok=outcome.ok,
                     classification=outcome.classification,
                     data=safe_data, safe_error="" if outcome.ok
-                    else safe_error))
+                    else safe_error, repeat_count=repeat_count,
+                    next_identical_request_will_stop=repeat_will_stop))
                 emit(AgentEventKind.TOOL_RESULT,
                      {"call_id": call.call_id, "request_id": request_id,
                       "tool_id": call.tool_id, "ok": outcome.ok,

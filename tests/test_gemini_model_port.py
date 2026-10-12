@@ -129,7 +129,7 @@ class TestToolDeclarations:
         decls = build_tool_declarations()
         assert [decl["name"] for decl in decls] == \
             [spec.tool_id for spec in READ_ONLY_SPECS]
-        assert len(decls) == 9
+        assert len(decls) == 10
 
     def test_declaration_arguments_match_registry(self):
         specs = {spec.tool_id: spec for spec in READ_ONLY_SPECS}

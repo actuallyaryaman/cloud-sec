@@ -134,6 +134,8 @@ class ToolObservation:
     classification: str
     data: object = field(default_factory=dict)
     safe_error: str = ""
+    repeat_count: int = 1
+    next_identical_request_will_stop: bool = False
 
     def __post_init__(self):
         _require_text("call_id", self.call_id)
@@ -145,6 +147,12 @@ class ToolObservation:
         object.__setattr__(self, "data", _freeze_arguments(self.data))
         if not isinstance(self.safe_error, str):
             raise TypeError("safe_error must be a string")
+        if isinstance(self.repeat_count, bool) or \
+                not isinstance(self.repeat_count, int) or \
+                self.repeat_count < 1:
+            raise ValueError("repeat_count must be a positive int")
+        if not isinstance(self.next_identical_request_will_stop, bool):
+            raise TypeError("next_identical_request_will_stop must be a bool")
 
 
 class InvestigationStatus(str, Enum):

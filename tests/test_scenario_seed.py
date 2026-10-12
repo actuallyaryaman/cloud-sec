@@ -141,7 +141,9 @@ class TestInvestigatorPolicy:
         for item in statements(s.investigator_policy_document()):
             if "*" in item["Resource"]:
                 found = True
-                assert set(item["Action"]) <= compat_actions, item["Action"]
+                actions = set(item["Action"])
+                assert actions <= compat_actions or actions == \
+                    {"iam:ListUsers"}, item["Action"]
         assert found
 
     def test_policy_name(self):

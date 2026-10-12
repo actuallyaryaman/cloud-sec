@@ -83,9 +83,9 @@ class TestCapabilitySetRepresentation:
 
 
 class TestBroadCapability:
-    def test_broad_has_all_eleven_registered_tools(self):
+    def test_broad_has_all_twelve_registered_tools(self):
         assert bk.BROAD_CAPABILITY.tool_ids == frozenset(rg.tool_ids())
-        assert len(rg.tool_ids()) == 11
+        assert len(rg.tool_ids()) == 12
 
     def test_broad_includes_sensitive_read(self):
         assert rg.GET_SECRET_VALUE in bk.BROAD_CAPABILITY.tool_ids
@@ -121,8 +121,8 @@ class TestBroadCapability:
 
 
 class TestTaskScopedCapability:
-    def test_task_scoped_has_exactly_nine_tools(self):
-        assert len(bk.TASK_SCOPED_CAPABILITY.tool_ids) == 9
+    def test_task_scoped_has_exactly_ten_tools(self):
+        assert len(bk.TASK_SCOPED_CAPABILITY.tool_ids) == 10
 
     def test_task_scoped_is_exactly_the_read_only_tools(self):
         expected = {spec.tool_id for spec in

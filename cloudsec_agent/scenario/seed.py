@@ -15,6 +15,7 @@ __all__ = [
     "INCIDENT_POLICY_NAME",
     "INVESTIGATOR_POLICY_NAME",
     "FLOCI_INVESTIGATOR_IAM_RESOURCE",
+    "FLOCI_INVESTIGATOR_LIST_USERS_RESOURCE",
     "FLOCI_INVESTIGATOR_LOGS_RESOURCE",
     "incident_policy_document",
     "investigator_policy_document",
@@ -48,6 +49,7 @@ SCENARIO_FILENAME = "csi-incident-v1"
 INCIDENT_POLICY_NAME = RESOURCES.incident_policy
 INVESTIGATOR_POLICY_NAME = "csi-investigator-readonly"
 FLOCI_INVESTIGATOR_IAM_RESOURCE = "*"
+FLOCI_INVESTIGATOR_LIST_USERS_RESOURCE = "*"
 FLOCI_INVESTIGATOR_LOGS_RESOURCE = "*"
 INCIDENT_POLICY_DOCUMENT = "csi-incident-scout.json"
 LAMBDA_RUNTIME = "python3.13"
@@ -323,6 +325,8 @@ def investigator_policy_document() -> str:
             _statement("Allow", ["iam:GetUser", "iam:ListAccessKeys",
                                  "iam:GetUserPolicy", "iam:ListUserPolicies"],
                        FLOCI_INVESTIGATOR_IAM_RESOURCE),
+            _statement("Allow", "iam:ListUsers",
+                       FLOCI_INVESTIGATOR_LIST_USERS_RESOURCE),
         ],
     }, sort_keys=True)
 

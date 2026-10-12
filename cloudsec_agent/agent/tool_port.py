@@ -18,6 +18,7 @@ KNOWN_TOOL_IDS = frozenset({
     "iam_list_access_keys",
     "iam_get_user_policy",
     "iam_list_user_policies",
+    "iam_list_users",
     "secrets_describe_secret",
     "logs_get_log_events",
     "lambda_get_function_configuration",

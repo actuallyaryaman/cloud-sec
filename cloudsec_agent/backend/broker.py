@@ -141,6 +141,8 @@ def _investigation_resources() -> dict:
         "iam_list_access_keys": frozenset({incident_user_arn()}),
         "iam_get_user_policy": frozenset({incident_user_arn()}),
         "iam_list_user_policies": frozenset({incident_user_arn()}),
+        "iam_list_users": frozenset(
+            {incident_user_arn().rsplit("/", 1)[0]}),
         "secrets_describe_secret": frozenset({_d.RESOURCES.secret_name}),
         "logs_get_log_events": frozenset({
             f"arn:aws:logs:us-east-1:000000000000:log-group:"

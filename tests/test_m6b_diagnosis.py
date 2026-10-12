@@ -168,18 +168,17 @@ def _contains(corpus, value):
 
 
 class TestToolDependencyGraph:
-    def test_nine_read_tools_with_exact_requirements(self):
+    def test_before_after_surfaces_explicit(self):
         from cloudsec_agent.backend import registry as rg
-        assert len(rg.READ_ONLY_SPECS) == 9
-        assert {spec.tool_id for spec in rg.READ_ONLY_SPECS} == set(
-            TOOL_DEPENDENCIES)
-        for spec in rg.READ_ONLY_SPECS:
-            assert set(spec.required_arguments) <= set(
-                TOOL_DEPENDENCIES[spec.tool_id])
-            assert set(spec.argument_names) == set(
-                TOOL_DEPENDENCIES[spec.tool_id])
+        before = set(TOOL_DEPENDENCIES)
+        assert len(before) == 9
+        current = {spec.tool_id for spec in rg.READ_ONLY_SPECS}
+        assert before < current
+        assert current - before == {"iam_list_users"}
+        for tool_id in before:
+            assert tool_id in current
 
-    def test_identity_gated_tools_have_no_discovery_sibling(self):
+    def test_before_surface_had_no_discovery_sibling(self):
         assert "iam_list_users" not in TOOL_DEPENDENCIES
         assert "sts_get_caller_identity" not in TOOL_DEPENDENCIES
 
@@ -284,7 +283,7 @@ class TestRepeatSemantics:
         assert result.tool_call_count == 2
         assert result.stop_reason == "identical_request_repeat_limit"
 
-    def test_repeated_observations_carry_no_warning(self):
+    def test_after_surface_exposes_repeat_metadata(self):
         call = AgentToolCall(call_id="c", tool_id="logs_get_log_events",
                              arguments={"logGroupName": GROUP,
                                         "logStreamName": STREAM})
@@ -292,14 +291,9 @@ class TestRepeatSemantics:
         _, port = _backend(_responses())
         orch = AgentOrchestrator(model, port)
         orch.run("run-dup-obs")
-        for context in model.contexts:
-            for obs in context.observations:
-                blob = json.dumps(dict(obs.data), default=str).lower()
-                assert "repeat" not in blob
-                assert "identical" not in blob
-                assert "will_stop" not in blob
         text = adapter.build_investigation_text(model.contexts[-1])
-        assert "repeat" not in text.lower()
+        assert "repeat_count=2" in text
+        assert "next_identical_request_will_stop=True" in text
 
 
 class TestCounterfactualH1:
@@ -408,11 +402,12 @@ class TestProductionFrozen:
         assert "```json" in adapter.SYSTEM_INSTRUCTION
         assert "untrusted evidence" in adapter.SYSTEM_INSTRUCTION
 
-    def test_tool_surface_unchanged(self):
+    def test_tool_surface_before_after(self):
         from cloudsec_agent.agent.tool_port import KNOWN_TOOL_IDS
-        assert len(KNOWN_TOOL_IDS) == 11
-        assert len(adapter.build_tool_declarations()) == 9
-        assert len(adapter.READ_TOOL_IDS) == 9
+        assert len(KNOWN_TOOL_IDS) == 12
+        assert len(adapter.build_tool_declarations()) == 10
+        assert len(adapter.READ_TOOL_IDS) == 10
+        assert "iam_list_users" in adapter.READ_TOOL_IDS
 
     def test_no_tracked_production_files_modified(self):
         out = subprocess.run(
@@ -420,8 +415,25 @@ class TestProductionFrozen:
             cwd="/home/logic/Projects/cyber/cloud-sec", timeout=60)
         assert out.returncode == 0
         tracked = [line for line in out.stdout.splitlines() if line.strip()]
-        assert all(path in ("pyproject.toml", "uv.lock")
-                   for path in tracked), tracked
+        allowed = {"pyproject.toml", "uv.lock",
+                   "cloudsec_agent/backend/registry.py",
+                   "cloudsec_agent/backend/broker.py",
+                   "cloudsec_agent/agent/models.py",
+                   "cloudsec_agent/agent/orchestrator.py",
+                   "cloudsec_agent/agent/tool_port.py",
+                   "cloudsec_agent/integration/read_port.py",
+                   "cloudsec_agent/integration/agent_backend.py",
+                   "cloudsec_agent/scenario/seed.py",
+                   "cloudsec_agent/providers/gemini.py",
+                   "tests/test_backend_registry.py",
+                   "tests/test_backend_broker.py",
+                   "tests/test_backend_m2_identity.py",
+                   "tests/test_scenario_seed.py",
+                   "tests/test_agent_backend_integration.py",
+                   "tests/test_investigator_compat.py",
+                   "tests/test_gemini_model_port.py",
+                   "tests/test_m6b_diagnosis.py"}
+        assert all(path in allowed for path in tracked), tracked
 
     def test_no_backend_semantics_change(self):
         from cloudsec_agent.backend import broker

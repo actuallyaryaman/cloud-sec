@@ -40,7 +40,8 @@ class TestActionAllowlistUnchanged:
                        "lambda:GetFunctionConfiguration",
                        "secretsmanager:DescribeSecret",
                        "iam:GetUser", "iam:ListAccessKeys",
-                       "iam:GetUserPolicy", "iam:ListUserPolicies"):
+                       "iam:GetUserPolicy", "iam:ListUserPolicies",
+                       "iam:ListUsers"):
             assert action in actions, action
 
     def test_no_secret_or_mutation_actions(self):
@@ -69,6 +70,28 @@ class TestCompatibilityScope:
                                    "iam:GetUserPolicy",
                                    "iam:ListUserPolicies"))
         assert resources == [s.FLOCI_INVESTIGATOR_IAM_RESOURCE]
+
+    def test_list_users_uses_isolated_resource(self):
+        assert s.FLOCI_INVESTIGATOR_LIST_USERS_RESOURCE == "*"
+        matches = [item for item in statements()
+                   if "iam:ListUsers" in item["Action"]]
+        assert len(matches) == 1
+        assert matches[0]["Action"] == ["iam:ListUsers"]
+        assert matches[0]["Resource"] == \
+            [s.FLOCI_INVESTIGATOR_LIST_USERS_RESOURCE]
+        proven = [item for item in statements()
+                  if set(item["Action"]) <= {
+                      "iam:GetUser", "iam:ListAccessKeys",
+                      "iam:GetUserPolicy", "iam:ListUserPolicies"}]
+        assert all("iam:ListUsers" not in item["Action"]
+                   for item in proven)
+
+    def test_list_users_live_authorization_unproven(self):
+        import pathlib
+        live = (pathlib.Path(__file__).resolve().parent /
+                "test_agent_backend_live.py").read_text(encoding="utf-8")
+        assert 'factory("iam").list_users' not in live
+        assert "list_users_ok" not in live
 
     def test_wildcard_only_on_proven_logs_action(self):
         resources = resources_for(("logs:GetLogEvents",))
@@ -101,7 +124,7 @@ class TestBackendBoundariesUnchanged:
     def test_broker_still_exact_resource_constrained(self):
         assert "update_access_key" not in TASK_SCOPED_CAPABILITY.tool_ids
         assert "get_secret_value" not in TASK_SCOPED_CAPABILITY.tool_ids
-        assert len(TASK_SCOPED_CAPABILITY.tool_ids) == 9
+        assert len(TASK_SCOPED_CAPABILITY.tool_ids) == 10
 
     def test_agent_package_stays_backend_independent(self):
         import ast

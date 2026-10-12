@@ -132,9 +132,18 @@ def _observation_text(observations, cap_chars=12000) -> str:
         if len(data) > 2000:
             data = data[:2000] + "<truncated>"
         error = obs.safe_error if not obs.ok else ""
+        repeat_count = getattr(obs, "repeat_count", 1)
+        try:
+            repeat_count = int(repeat_count)
+        except (TypeError, ValueError):
+            repeat_count = 1
+        will_stop = bool(getattr(
+            obs, "next_identical_request_will_stop", False))
         lines.append(
             f"- call {obs.call_id}: {obs.tool_id} "
             f"ok={obs.ok} classification={obs.classification} "
+            f"repeat_count={repeat_count} "
+            f"next_identical_request_will_stop={will_stop} "
             f"data={data} error={error}")
     text = "\n".join(lines)
     if len(text) > cap_chars:

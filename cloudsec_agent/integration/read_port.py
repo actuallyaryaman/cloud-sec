@@ -3,6 +3,7 @@ __all__ = [
     "MAX_KEYS",
     "MAX_ACCESS_KEYS",
     "MAX_POLICIES",
+    "MAX_USERS",
     "MAX_LOG_EVENTS",
     "MAX_STRING_CHARS",
     "ReadPortError",
@@ -17,6 +18,7 @@ MAX_BODY_CHARS = 8192
 MAX_KEYS = 100
 MAX_ACCESS_KEYS = 10
 MAX_POLICIES = 20
+MAX_USERS = 100
 MAX_LOG_EVENTS = 50
 MAX_STRING_CHARS = 2000
 
@@ -75,6 +77,10 @@ class BackendReadPort(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def list_users(self):
+        raise NotImplementedError
+
+    @abstractmethod
     def describe_secret(self, secret_id):
         raise NotImplementedError
 
@@ -119,6 +125,9 @@ class FakeReadPort(BackendReadPort):
 
     def list_user_policies(self, user_name):
         return self._run("list_user_policies", user_name=user_name)
+
+    def list_users(self):
+        return self._run("list_users")
 
     def describe_secret(self, secret_id):
         return self._run("describe_secret", secret_id=secret_id)
@@ -260,6 +269,22 @@ class FlociReadPort(BackendReadPort):
                     "policy_names": names[:MAX_POLICIES],
                     "count": len(names),
                     "truncated": len(names) > MAX_POLICIES}
+        return self._call(run)
+
+    def list_users(self):
+        def run():
+            raw = self._client("iam").list_users()
+            rows = []
+            for item in raw.get("Users", []):
+                if not isinstance(item, dict):
+                    continue
+                rows.append({
+                    "user_name": _text(item.get("UserName")),
+                    "arn": _text(item.get("Arn")),
+                    "create_date": _text(item.get("CreateDate"))})
+            return {"users": rows[:MAX_USERS],
+                    "count": len(rows),
+                    "truncated": len(rows) > MAX_USERS}
         return self._call(run)
 
     def describe_secret(self, secret_id):

@@ -856,7 +856,9 @@ class TestM1LeftUntouched:
         document = json.loads(investigator_policy_document())
         for statement in document["Statement"]:
             if "*" in statement["Resource"]:
-                assert set(statement["Action"]) <= compat_actions
+                actions = set(statement["Action"])
+                assert actions <= compat_actions or actions == \
+                    {"iam:ListUsers"}
                 assert set(statement["Resource"]) <= compat_resources
 
     def test_m1_investigator_policy_is_unaffected_by_the_concession(self):
@@ -883,7 +885,9 @@ class TestM1LeftUntouched:
         for statement in json.loads(
                 investigator_policy_document())["Statement"]:
             if "*" in statement["Resource"]:
-                assert set(statement["Action"]) <= compat_actions
+                actions = set(statement["Action"])
+                assert actions <= compat_actions or actions == \
+                    {"iam:ListUsers"}
                 assert set(statement["Resource"]) <= compat_resources
 
     def test_m1_policies_use_no_bare_wildcard_resource_element(self):

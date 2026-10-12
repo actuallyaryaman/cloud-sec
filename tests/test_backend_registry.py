@@ -19,6 +19,7 @@ EXPECTED_READ_ONLY = {
     "secrets_describe_secret": "secretsmanager:DescribeSecret",
     "logs_get_log_events": "logs:GetLogEvents",
     "lambda_get_function_configuration": "lambda:GetFunctionConfiguration",
+    "iam_list_users": "iam:ListUsers",
 }
 
 
@@ -123,7 +124,7 @@ class TestInvestigationToolsRegistration:
         assert spec.category is rg.Category.READ_ONLY
         assert spec.service_action == service_action
 
-    def test_all_nine_investigation_tools_present(self):
+    def test_all_ten_investigation_tools_present(self):
         for tool_id in EXPECTED_READ_ONLY:
             assert tool_id in rg.tool_ids()
 
@@ -224,6 +225,9 @@ class TestRegistryUniqueness:
 
     def test_every_tool_declares_required_arguments(self):
         for spec in rg.all_tools():
+            if spec.tool_id in ("iam_list_users",):
+                assert spec.required_arguments == ()
+                continue
             assert spec.required_arguments
 
     def test_required_and_optional_arguments_do_not_overlap(self):
