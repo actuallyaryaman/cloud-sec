@@ -1,7 +1,11 @@
+# Synthetic research data only. Free/trial model endpoints may use
+# submitted content to improve their products. Never send personal data,
+# production secrets, real credentials, or customer data. The bundled
+# scenario fixtures are synthetic and safe for such endpoints.
 [model]
-provider = "google"
-model = "gemini-3.8-flash"
+provider = "kilo"
+model = "nvidia/nemotron-3-ultra-550b-a55b:free"
 temperature = 0.0
 max_output_tokens = 2048
-adapter_version = "m6a-v1"
-prompt_version = "m6a-sys-v1"
+adapter_version = "m6g-kilo-v1"
+prompt_version = "m6g-kilo-sys-v1"

@@ -79,7 +79,7 @@ class TestSecretSeparation:
                                          capsys):
         _write_toml(tmp_path, _toml_for())
         _, code, _ = _setup_run(monkeypatch, tmp_path,
-                                inputs=["n", "n"], key_entries=[CANARY])
+                                inputs=["n", "n", "n"], key_entries=[CANARY])
         assert code == 0
         text = (tmp_path / "config" / "model.toml").read_text(
             encoding="utf-8")
@@ -104,7 +104,7 @@ class TestInteractiveSetup:
     def test_setup_uses_hidden_input(self, monkeypatch, tmp_path):
         _write_toml(tmp_path, _toml_for())
         _, code, entered = _setup_run(
-            monkeypatch, tmp_path, inputs=["n"], key_entries=[CANARY])
+            monkeypatch, tmp_path, inputs=["n", "n"], key_entries=[CANARY])
         assert code == 0
         assert len(entered) == 1
         stored = (tmp_path / ".env.local").read_text(encoding="utf-8")
@@ -116,7 +116,7 @@ class TestInteractiveSetup:
         (tmp_path / ".env.local").write_text(
             f"GEMINI_API_KEY={CANARY}\n", encoding="utf-8")
         _, code, entered = _setup_run(monkeypatch, tmp_path,
-                                      inputs=["n", "n"], key_entries=[])
+                                      inputs=["n", "n", "n"], key_entries=[])
         assert code == 0
         assert entered == []
         assert "CANARY" not in capsys.readouterr().out
@@ -127,7 +127,7 @@ class TestInteractiveSetup:
         before = f"GEMINI_API_KEY={CANARY}\n"
         (tmp_path / ".env.local").write_text(before, encoding="utf-8")
         _, code, _ = _setup_run(monkeypatch, tmp_path,
-                                inputs=["n", ""], key_entries=[])
+                                inputs=["n", "n", ""], key_entries=[])
         assert code == 0
         assert (tmp_path / ".env.local").read_text(
             encoding="utf-8") == before
@@ -138,7 +138,7 @@ class TestInteractiveSetup:
         before = (tmp_path / "config" / "model.toml").read_text(
             encoding="utf-8")
         _, code, _ = _setup_run(monkeypatch, tmp_path,
-                                inputs=["y", ""], key_entries=[CANARY])
+                                inputs=["n", "y", ""], key_entries=[CANARY])
         assert code == 0
         out = capsys.readouterr().out
         assert "Configured model: gemini-x-model" in out
@@ -151,7 +151,7 @@ class TestInteractiveSetup:
     def test_env_local_mode_restrictive(self, monkeypatch, tmp_path):
         _write_toml(tmp_path, _toml_for())
         _, code, _ = _setup_run(monkeypatch, tmp_path,
-                                inputs=["n"], key_entries=[CANARY])
+                                inputs=["n", "n"], key_entries=[CANARY])
         assert code == 0
         mode = stat.S_IMODE(os.stat(tmp_path / ".env.local").st_mode)
         assert mode == 0o600

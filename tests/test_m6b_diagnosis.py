@@ -435,6 +435,9 @@ class TestProductionFrozen:
                    "tests/test_m6b_diagnosis.py",
                    "tests/test_model_config.py",
                    "cloudsec_agent/providers/model_config.py",
+                   "cloudsec_agent/providers/__init__.py",
+                   "cloudsec_agent/providers/kilo.py",
+                   "scripts/setup_model_config.py",
                    "config/model.toml",
                    ".env.example",
                    ".gitignore"}
