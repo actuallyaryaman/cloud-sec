@@ -19,12 +19,15 @@ from ..agent.model_port import (ModelContext, ModelPort, ModelPortError,
 from ..agent.models import (AgentFinalAnswer, AgentToolCall,
                             RecommendedAction)
 from ..backend.registry import READ_ONLY_SPECS
+from .model_config import (MODEL_VAR as MODEL_ENV_VAR, ensure_api_key_env,
+                           load_model_settings, resolve_model_value)
 
 ADAPTER_VERSION = "m6a-v1"
 PROMPT_VERSION = "m6a-sys-v1"
 
 DEFAULT_MODEL = "gemini-2.5-pro"
-MODEL_ENV_VAR = "CLOUDSEC_GEMINI_MODEL"
+DEFAULT_TEMPERATURE = 0.0
+DEFAULT_MAX_OUTPUT_TOKENS = 2048
 
 READ_TOOL_IDS = tuple(spec.tool_id for spec in READ_ONLY_SPECS)
 
@@ -100,12 +103,28 @@ def classify_provider_exception(exc) -> str:
 
 
 def resolve_model_name(explicit=None) -> str:
-    if explicit:
+    return resolve_model_value(
+        explicit=explicit,
+        env_value=os.environ.get(MODEL_ENV_VAR, ""),
+        settings=load_model_settings(), fallback=DEFAULT_MODEL)
+
+
+def resolve_temperature(explicit=None) -> float:
+    if explicit is not None:
         return explicit
-    configured = os.environ.get(MODEL_ENV_VAR, "")
-    if isinstance(configured, str) and configured.strip():
-        return configured.strip()
-    return DEFAULT_MODEL
+    settings = load_model_settings()
+    if settings.temperature is not None:
+        return settings.temperature
+    return DEFAULT_TEMPERATURE
+
+
+def resolve_max_output_tokens(explicit=None) -> int:
+    if explicit is not None:
+        return explicit
+    settings = load_model_settings()
+    if settings.max_output_tokens is not None:
+        return settings.max_output_tokens
+    return DEFAULT_MAX_OUTPUT_TOKENS
 
 
 def build_tool_declarations() -> tuple:
@@ -259,16 +278,18 @@ def parse_final_answer(payload) -> AgentFinalAnswer:
 
 
 class GeminiModelPort(ModelPort):
-    def __init__(self, *, model=None, temperature=0.0,
-                 max_output_tokens=2048, client=None, client_factory=None,
+    def __init__(self, *, model=None, temperature=None,
+                 max_output_tokens=None, client=None, client_factory=None,
                  case_briefing=""):
         self._model = resolve_model_name(model)
-        if not isinstance(temperature, (int, float)):
+        resolved_temperature = resolve_temperature(temperature)
+        if not isinstance(resolved_temperature, (int, float)):
             raise TypeError("temperature must be a number")
-        self._temperature = float(temperature)
-        if not isinstance(max_output_tokens, int) or max_output_tokens < 1:
+        self._temperature = float(resolved_temperature)
+        resolved_tokens = resolve_max_output_tokens(max_output_tokens)
+        if not isinstance(resolved_tokens, int) or resolved_tokens < 1:
             raise ValueError("max_output_tokens must be a positive int")
-        self._max_output_tokens = max_output_tokens
+        self._max_output_tokens = resolved_tokens
         self._client = client
         self._client_factory = client_factory
         if case_briefing is None:
@@ -296,6 +317,8 @@ class GeminiModelPort(ModelPort):
         if self._client_factory is not None:
             self._client = self._client_factory()
             return self._client
+        if not ensure_api_key_env():
+            raise GeminiProviderError("auth_error")
         try:
             from google import genai
         except ImportError:

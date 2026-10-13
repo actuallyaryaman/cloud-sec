@@ -95,7 +95,9 @@ def _answer_payload(**overrides):
 
 
 class TestRequestConversion:
-    def test_context_converted_to_provider_request(self):
+    def test_context_converted_to_provider_request(self, monkeypatch,
+                                                   tmp_path):
+        monkeypatch.chdir(tmp_path)
         models = FakeModels([FakeResponse(
             [FakePart(function_call=FakeFunctionCall(
                 "s3_list_objects", {"Bucket": "b"}, "f1"))])])
@@ -323,7 +325,8 @@ class TestModelConfiguration:
         assert GeminiModelPort(model="gemini-explicit").model_name == \
             "gemini-explicit"
 
-    def test_default_model_is_m6a_default(self, monkeypatch):
+    def test_default_model_is_m6a_default(self, monkeypatch, tmp_path):
+        monkeypatch.chdir(tmp_path)
         monkeypatch.delenv(g.MODEL_ENV_VAR, raising=False)
         assert DEFAULT_MODEL == "gemini-2.5-pro"
         assert resolve_model_name() == "gemini-2.5-pro"

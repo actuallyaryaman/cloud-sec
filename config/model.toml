@@ -1,0 +1,7 @@
+[model]
+provider = "google"
+model = "gemini-3.8-flash"
+temperature = 0.0
+max_output_tokens = 2048
+adapter_version = "m6a-v1"
+prompt_version = "m6a-sys-v1"

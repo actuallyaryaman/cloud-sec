@@ -432,7 +432,12 @@ class TestProductionFrozen:
                    "tests/test_agent_backend_integration.py",
                    "tests/test_investigator_compat.py",
                    "tests/test_gemini_model_port.py",
-                   "tests/test_m6b_diagnosis.py"}
+                   "tests/test_m6b_diagnosis.py",
+                   "tests/test_model_config.py",
+                   "cloudsec_agent/providers/model_config.py",
+                   "config/model.toml",
+                   ".env.example",
+                   ".gitignore"}
         assert all(path in allowed for path in tracked), tracked
 
     def test_no_backend_semantics_change(self):
