@@ -6,13 +6,17 @@ __all__ = [
     "SYSTEM_INSTRUCTION",
     "READ_TOOL_IDS",
     "GeminiProviderError",
+    "ProviderErrorInfo",
     "GeminiModelPort",
     "build_tool_declarations",
     "classify_provider_exception",
+    "describe_provider_exception",
 ]
 
 import json
 import os
+import re
+from dataclasses import dataclass
 
 from ..agent.model_port import (ModelContext, ModelPort, ModelPortError,
                                 ModelTurn)
@@ -61,45 +65,101 @@ evidence does not support an accusation or an action."""
 
 
 class GeminiProviderError(ModelPortError):
-    def __init__(self, code):
+    def __init__(self, code, info=None):
         self.code = code
+        self.info = info
         super().__init__(f"gemini {code}")
 
 
-_AUTH_MARKERS = ("unauthenticated", "permissiondenied", "apikey",
-                 "api_key", "apikeyinvalid", "401", "403",
-                 "apikeynotvalid", "keynotvalid")
-_UNAVAILABLE_MARKERS = ("notfound", "notsupported", "404",
-                        "modelnotavailable", "doesnotexist")
-_RATE_MARKERS = ("ratelimited", "resourceexhausted", "429",
-                 "quotaexceeded", "retryafter")
-_TIMEOUT_MARKERS = ("timeout", "deadlineexceeded", "504", "timedout")
+_STATUS_PATTERN = re.compile(r"[A-Z][A-Z0-9_]{0,63}")
+_BILLING_CODES = frozenset({"BILLING_DISABLED", "BILLING_NOT_FOUND"})
 
 
-def _normalized_markers(exc) -> str:
-    parts = [type(exc).__name__]
-    for cls in type(exc).__mro__:
-        parts.append(cls.__name__)
-    code = getattr(exc, "code", None)
-    status = getattr(exc, "status_code", None)
-    for value in (code, status):
-        if value is not None:
-            parts.append(str(value))
-    return "".join("".join(ch for ch in str(part).lower() if ch.isalnum())
-                   for part in parts)
+@dataclass(frozen=True)
+class ProviderErrorInfo:
+    classification: str
+    http_status: object = None
+    provider_code: object = None
+    retryable: bool = False
+
+    def __post_init__(self):
+        if not isinstance(self.classification, str) or \
+                not self.classification:
+            raise TypeError("classification must be a non-empty string")
+        if self.http_status is not None and \
+                (isinstance(self.http_status, bool) or
+                 not isinstance(self.http_status, int) or
+                 not 100 <= self.http_status <= 599):
+            raise ValueError("http_status must be an int from 100 to 599")
+        if self.provider_code is not None and \
+                (not isinstance(self.provider_code, str) or
+                 not _STATUS_PATTERN.fullmatch(self.provider_code)):
+            raise ValueError("provider_code must be a symbolic status")
+        if not isinstance(self.retryable, bool):
+            raise TypeError("retryable must be a bool")
+
+    @property
+    def safe_message(self) -> str:
+        return f"gemini {self.classification}"
+
+
+def _safe_http_status(exc):
+    for attr in ("code", "status_code"):
+        value = getattr(exc, attr, None)
+        if isinstance(value, bool):
+            continue
+        if isinstance(value, int) and 100 <= value <= 599:
+            return value
+    return None
+
+
+def _safe_provider_code(exc):
+    value = getattr(exc, "status", None)
+    if isinstance(value, str) and _STATUS_PATTERN.fullmatch(value):
+        return value
+    return None
+
+
+def _timeout_name(exc) -> bool:
+    names = [type(exc).__name__]
+    names.extend(cls.__name__ for cls in type(exc).__mro__)
+    text = "".join(
+        "".join(char for char in name.lower() if char.isalnum())
+        for name in names)
+    return "timeout" in text or "deadlineexceeded" in text or \
+        "timedout" in text
+
+
+def describe_provider_exception(exc) -> ProviderErrorInfo:
+    status = _safe_http_status(exc)
+    code = _safe_provider_code(exc)
+    if code == "UNAUTHENTICATED" or status == 401:
+        return ProviderErrorInfo("auth_error", status, code, False)
+    if code in _BILLING_CODES:
+        return ProviderErrorInfo("billing_or_account", status, code, False)
+    if code == "PERMISSION_DENIED" or status == 403:
+        return ProviderErrorInfo("permission_denied", status, code, False)
+    if status == 400:
+        return ProviderErrorInfo("bad_request", status, code, False)
+    if code == "NOT_FOUND" or status == 404:
+        return ProviderErrorInfo("model_unavailable", status, code, False)
+    if code == "DEADLINE_EXCEEDED" or status == 408:
+        return ProviderErrorInfo("timeout", status, code, True)
+    if code == "RESOURCE_EXHAUSTED" or status == 429:
+        if code == "RESOURCE_EXHAUSTED":
+            return ProviderErrorInfo("quota_exhausted", status, code, True)
+        return ProviderErrorInfo("rate_limited", status, code, True)
+    if code == "UNAVAILABLE" or status in (502, 503, 504):
+        return ProviderErrorInfo("service_unavailable", status, code, True)
+    if status == 500:
+        return ProviderErrorInfo("provider_error", status, code, True)
+    if _timeout_name(exc):
+        return ProviderErrorInfo("timeout", status, code, True)
+    return ProviderErrorInfo("provider_error", status, code, False)
 
 
 def classify_provider_exception(exc) -> str:
-    text = _normalized_markers(exc)
-    if any(marker in text for marker in _AUTH_MARKERS):
-        return "auth_error"
-    if any(marker in text for marker in _UNAVAILABLE_MARKERS):
-        return "model_unavailable"
-    if any(marker in text for marker in _RATE_MARKERS):
-        return "rate_limited"
-    if any(marker in text for marker in _TIMEOUT_MARKERS):
-        return "timeout"
-    return "provider_error"
+    return describe_provider_exception(exc).classification
 
 
 def resolve_model_name(explicit=None) -> str:
@@ -339,8 +399,8 @@ class GeminiModelPort(ModelPort):
         except GeminiProviderError:
             raise
         except Exception as exc:
-            raise GeminiProviderError(
-                classify_provider_exception(exc))
+            info = describe_provider_exception(exc)
+            raise GeminiProviderError(info.classification, info)
         self._record_usage(response)
         return self._to_turn(context, response)
 
