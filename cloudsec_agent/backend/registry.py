@@ -50,6 +50,7 @@ class ToolSpec:
     requires_policy: bool = True
     requires_approval: bool = False
     canonicalizer_id: str = CANONICALIZER_UNSET
+    description: str = ""
 
     @property
     def argument_names(self) -> tuple:
@@ -59,43 +60,65 @@ class ToolSpec:
 READ_ONLY_SPECS = (
     ToolSpec("s3_get_object", "s3:GetObject", Category.READ_ONLY,
              required_arguments=("Bucket", "Key"),
-             canonicalizer_id=RESOURCE_CANONICALIZER),
+             canonicalizer_id=RESOURCE_CANONICALIZER,
+             description="Reads one object body from a storage bucket. "
+                         "Needs the bucket name and an object key."),
     ToolSpec("s3_list_objects", "s3:ListObjectsV2", Category.READ_ONLY,
              required_arguments=("Bucket",),
              optional_arguments=("Prefix",),
-             canonicalizer_id=RESOURCE_CANONICALIZER),
+             canonicalizer_id=RESOURCE_CANONICALIZER,
+             description="Lists object keys in a storage bucket. Needs "
+                         "the bucket name; use returned keys for reads."),
     ToolSpec("iam_get_user", "iam:GetUser", Category.READ_ONLY,
              required_arguments=("UserName",),
-             canonicalizer_id=RESOURCE_CANONICALIZER),
-    ToolSpec("iam_list_access_keys", "iam:ListAccessKeys", Category.READ_ONLY,
+             canonicalizer_id=RESOURCE_CANONICALIZER,
+             description="Inspects a known IAM identity. Needs the exact "
+                         "user name."),
+    ToolSpec("iam_list_access_keys", "iam:ListAccessKeys",
+             Category.READ_ONLY,
              required_arguments=("UserName",),
-             canonicalizer_id=RESOURCE_CANONICALIZER),
+             canonicalizer_id=RESOURCE_CANONICALIZER,
+             description="Lists access keys of a known IAM identity. "
+                         "Needs the exact user name."),
     ToolSpec("iam_get_user_policy", "iam:GetUserPolicy", Category.READ_ONLY,
              required_arguments=("UserName", "PolicyName"),
-             canonicalizer_id=RESOURCE_CANONICALIZER),
+             canonicalizer_id=RESOURCE_CANONICALIZER,
+             description="Reads one inline policy of a known IAM identity. "
+                         "Needs the user name and a policy name."),
     ToolSpec("iam_list_user_policies", "iam:ListUserPolicies",
              Category.READ_ONLY, required_arguments=("UserName",),
-             canonicalizer_id=RESOURCE_CANONICALIZER),
+             canonicalizer_id=RESOURCE_CANONICALIZER,
+             description="Lists inline policy names of a known IAM "
+                         "identity. Needs the exact user name."),
     ToolSpec("iam_list_users", "iam:ListUsers", Category.READ_ONLY,
              required_arguments=(),
-             canonicalizer_id=RESOURCE_CANONICALIZER),
+             canonicalizer_id=RESOURCE_CANONICALIZER,
+             description="Enumerates IAM user identities visible to the "
+                         "investigator. Use when the relevant user name "
+                         "is not yet known."),
     ToolSpec("secrets_describe_secret", "secretsmanager:DescribeSecret",
              Category.READ_ONLY, required_arguments=("SecretId",),
-             canonicalizer_id=RESOURCE_CANONICALIZER),
+             canonicalizer_id=RESOURCE_CANONICALIZER,
+             description="Describes secret metadata without revealing the "
+                         "value. Needs the secret identifier."),
     ToolSpec("logs_get_log_events", "logs:GetLogEvents", Category.READ_ONLY,
              required_arguments=("logGroupName", "logStreamName"),
-             canonicalizer_id=RESOURCE_CANONICALIZER),
+             canonicalizer_id=RESOURCE_CANONICALIZER,
+             description="Reads log events from a log stream. Needs the "
+                         "log group and stream names."),
     ToolSpec("lambda_get_function_configuration",
              "lambda:GetFunctionConfiguration", Category.READ_ONLY,
              required_arguments=("FunctionName",),
-             canonicalizer_id=RESOURCE_CANONICALIZER),
+             canonicalizer_id=RESOURCE_CANONICALIZER,
+             description="Reads configuration of a serverless function. "
+                         "Needs the function name."),
 )
-
 SENSITIVE_READ_SPECS = (
     ToolSpec(GET_SECRET_VALUE, "secretsmanager:GetSecretValue",
              Category.SENSITIVE_READ, required_arguments=("SecretId",),
              requires_approval=False,
-             canonicalizer_id=SECRET_READ_CANONICALIZER),
+             canonicalizer_id=SECRET_READ_CANONICALIZER,
+             description="Retrieves a secret value. Sensitive read."),
 )
 
 STATE_CHANGING_SPECS = (
@@ -104,7 +127,8 @@ STATE_CHANGING_SPECS = (
              required_arguments=("UserName", "AccessKeyId", "Status"),
              optional_arguments=(),
              requires_approval=True,
-             canonicalizer_id=CONTAINMENT_CANONICALIZER),
+             canonicalizer_id=CONTAINMENT_CANONICALIZER,
+             description="Changes access-key state. Containment path only."),
 )
 
 _TOOLS = {spec.tool_id: spec

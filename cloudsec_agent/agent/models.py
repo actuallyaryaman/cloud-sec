@@ -136,6 +136,7 @@ class ToolObservation:
     safe_error: str = ""
     repeat_count: int = 1
     next_identical_request_will_stop: bool = False
+    repeat_warning: str = ""
 
     def __post_init__(self):
         _require_text("call_id", self.call_id)
@@ -153,6 +154,8 @@ class ToolObservation:
             raise ValueError("repeat_count must be a positive int")
         if not isinstance(self.next_identical_request_will_stop, bool):
             raise TypeError("next_identical_request_will_stop must be a bool")
+        if not isinstance(self.repeat_warning, str):
+            raise TypeError("repeat_warning must be a string")
 
 
 class InvestigationStatus(str, Enum):

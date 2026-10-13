@@ -1,5 +1,6 @@
 __all__ = [
     "AgentOrchestrator",
+    "REPEAT_WARNING",
 ]
 
 import json
@@ -16,6 +17,12 @@ from .tool_port import (KNOWN_TOOL_IDS, BackendToolRequest, ToolPort,
 _STRIPPED_KEY_PARTS = ("secretstring", "secretbinary", "secretaccesskey",
                        "secretvalue", "sessiontoken", "credential",
                        "password", "privatekey")
+
+REPEAT_WARNING = (
+    "Warning: this exact tool request has already been repeated. "
+    "Repeating the identical request again will terminate the "
+    "investigation. Choose a different evidence-gathering action or "
+    "provide your final answer.")
 
 
 def _normalize_key(name) -> str:
@@ -216,6 +223,9 @@ class AgentOrchestrator:
                 repeat_count = seen + 1
                 repeat_will_stop = repeat_count >= \
                     limits.max_identical_request_repeats
+                repeat_warning = ""
+                if repeat_will_stop:
+                    repeat_warning = REPEAT_WARNING
                 request_id = f"{run_id}:req:{tool_call_count:04d}"
                 justification = (call.justification or "")[
                     :limits.max_justification_chars]
@@ -254,7 +264,8 @@ class AgentOrchestrator:
                     classification=outcome.classification,
                     data=safe_data, safe_error="" if outcome.ok
                     else safe_error, repeat_count=repeat_count,
-                    next_identical_request_will_stop=repeat_will_stop))
+                    next_identical_request_will_stop=repeat_will_stop,
+                    repeat_warning=repeat_warning))
                 emit(AgentEventKind.TOOL_RESULT,
                      {"call_id": call.call_id, "request_id": request_id,
                       "tool_id": call.tool_id, "ok": outcome.ok,
