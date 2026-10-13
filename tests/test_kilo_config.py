@@ -6,10 +6,40 @@ import stat
 
 import pytest
 
+from pathlib import Path
+
 from cloudsec_agent.providers import create_model_port
 from cloudsec_agent.providers.gemini import GeminiModelPort
 from cloudsec_agent.providers.kilo import KiloModelPort
 from cloudsec_agent.providers import model_config as cfg
+
+LING_ID = "inclusionai/ling-3.1-flash"
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+class TestTrackedDefault:
+    def test_tracked_toml_selects_ling(self):
+        settings = cfg.load_model_settings(
+            REPO_ROOT / "config" / "model.toml")
+        assert settings.provider == "kilo"
+        assert settings.model == LING_ID
+        assert settings.temperature == 0.0
+        assert settings.max_output_tokens == 2048
+
+    def test_adapter_resolves_tracked_ling(self, monkeypatch):
+        monkeypatch.chdir(REPO_ROOT)
+        monkeypatch.delenv("CLOUDSEC_KILO_MODEL", raising=False)
+        monkeypatch.delenv("CLOUDSEC_GEMINI_MODEL", raising=False)
+        port = KiloModelPort(client=object())
+        assert port.model_name == LING_ID
+        assert port.temperature == 0.0
+
+    def test_model_only_substitution(self):
+        import cloudsec_agent.providers.kilo as kilo
+        assert kilo.ADAPTER_VERSION == "m6g-kilo-v1"
+        assert kilo.PROMPT_VERSION == "m6k-kilo-sys-v1"
+        assert kilo.BASE_URL == "https://api.kilo.ai/api/gateway"
+        assert len(kilo.build_function_tools()) == 10
 
 
 @pytest.fixture(autouse=True)
@@ -169,7 +199,7 @@ class TestKiloSetup:
         text = (tmp_path / "config" / "model.toml").read_text(
             encoding="utf-8")
         assert 'provider = "kilo"' in text
-        assert "nvidia/nemotron-3-ultra-550b-a55b:free" in text
+        assert "inclusionai/ling-3.1-flash" in text
 
     @pytest.mark.skipif(os.name != "posix",
                         reason="posix permission bits only")

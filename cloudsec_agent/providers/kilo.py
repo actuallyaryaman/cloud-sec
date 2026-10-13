@@ -33,7 +33,7 @@ from .model_config import (KILO_MODEL_VAR, ensure_kilo_key_env,
 ADAPTER_VERSION = "m6g-kilo-v1"
 PROMPT_VERSION = "m6k-kilo-sys-v1"
 
-DEFAULT_MODEL = "nvidia/nemotron-3-ultra-550b-a55b:free"
+DEFAULT_MODEL = "inclusionai/ling-3.1-flash"
 MODEL_ENV_VAR = KILO_MODEL_VAR
 BASE_URL = "https://api.kilo.ai/api/gateway"
 DEFAULT_TEMPERATURE = 0.0

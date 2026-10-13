@@ -13,7 +13,7 @@ ENV_LOCAL_NAME = ".env.local"
 PROVIDERS = ("google", "kilo")
 PROVIDER_DEFAULTS = {
     "google": "gemini-3.8-flash",
-    "kilo": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "kilo": "inclusionai/ling-3.1-flash",
 }
 PROVIDER_KEYS = {
     "google": "GEMINI_API_KEY",

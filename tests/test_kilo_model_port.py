@@ -161,7 +161,7 @@ class TestConfiguration:
         monkeypatch.delenv("CLOUDSEC_KILO_MODEL", raising=False)
         monkeypatch.delenv("CLOUDSEC_GEMINI_MODEL", raising=False)
         assert k.DEFAULT_MODEL == \
-            "nvidia/nemotron-3-ultra-550b-a55b:free"
+            "inclusionai/ling-3.1-flash"
         assert resolve_kilo_model() == k.DEFAULT_MODEL
 
     def test_missing_key_is_auth_error(self, monkeypatch, tmp_path):
