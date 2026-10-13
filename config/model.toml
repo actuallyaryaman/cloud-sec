@@ -4,7 +4,7 @@
 # scenario fixtures are synthetic and safe for such endpoints.
 [model]
 provider = "kilo"
-model = "inclusionai/ling-3.1-flash"
+model = "stealth/glyph-cluster"
 temperature = 0.0
 max_output_tokens = 2048
 adapter_version = "m6g-kilo-v1"

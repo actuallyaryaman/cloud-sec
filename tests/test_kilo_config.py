@@ -13,7 +13,7 @@ from cloudsec_agent.providers.gemini import GeminiModelPort
 from cloudsec_agent.providers.kilo import KiloModelPort
 from cloudsec_agent.providers import model_config as cfg
 
-LING_ID = "inclusionai/ling-3.1-flash"
+LING_ID = "stealth/glyph-cluster"
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -199,7 +199,7 @@ class TestKiloSetup:
         text = (tmp_path / "config" / "model.toml").read_text(
             encoding="utf-8")
         assert 'provider = "kilo"' in text
-        assert "inclusionai/ling-3.1-flash" in text
+        assert "stealth/glyph-cluster" in text
 
     @pytest.mark.skipif(os.name != "posix",
                         reason="posix permission bits only")
