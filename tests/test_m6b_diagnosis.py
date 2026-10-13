@@ -436,6 +436,7 @@ class TestProductionFrozen:
                    "tests/test_model_config.py",
                    "tests/test_kilo_config.py",
                    "tests/test_kilo_model_port.py",
+                   "tests/test_m6k_convergence.py",
                    "tests/test_m6j_finalization.py",
                    "tests/test_m6i_guidance.py",
                    "cloudsec_agent/agent/model_port.py",

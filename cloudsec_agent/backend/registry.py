@@ -72,24 +72,31 @@ READ_ONLY_SPECS = (
     ToolSpec("iam_get_user", "iam:GetUser", Category.READ_ONLY,
              required_arguments=("UserName",),
              canonicalizer_id=RESOURCE_CANONICALIZER,
-             description="Inspects a known IAM identity. Needs the exact "
-                         "user name."),
+             description="Inspects a known IAM identity. Needs the exact IAM user name "
+                         "established as such, not another observed actor, "
+                         "session, or credential identifier."),
     ToolSpec("iam_list_access_keys", "iam:ListAccessKeys",
              Category.READ_ONLY,
              required_arguments=("UserName",),
              canonicalizer_id=RESOURCE_CANONICALIZER,
              description="Lists access keys of a known IAM identity. "
-                         "Needs the exact user name."),
+                         "Needs the exact IAM user name established as "
+                         "such, not another observed actor, session, or "
+                         "credential identifier."),
     ToolSpec("iam_get_user_policy", "iam:GetUserPolicy", Category.READ_ONLY,
              required_arguments=("UserName", "PolicyName"),
              canonicalizer_id=RESOURCE_CANONICALIZER,
              description="Reads one inline policy of a known IAM identity. "
-                         "Needs the user name and a policy name."),
+                         "Needs the IAM user name established as such, "
+                         "not another observed actor, session, or "
+                         "credential identifier, and a policy name."),
     ToolSpec("iam_list_user_policies", "iam:ListUserPolicies",
              Category.READ_ONLY, required_arguments=("UserName",),
              canonicalizer_id=RESOURCE_CANONICALIZER,
              description="Lists inline policy names of a known IAM "
-                         "identity. Needs the exact user name."),
+                         "identity. Needs the exact IAM user name "
+                         "established as such, not another observed "
+                         "actor, session, or credential identifier."),
     ToolSpec("iam_list_users", "iam:ListUsers", Category.READ_ONLY,
              required_arguments=(),
              canonicalizer_id=RESOURCE_CANONICALIZER,

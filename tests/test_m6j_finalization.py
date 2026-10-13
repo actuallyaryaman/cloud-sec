@@ -51,7 +51,7 @@ def _final(principal, key_id, action=True):
 
 class TestPromptVersions:
     def test_new_version(self):
-        assert adapter.PROMPT_VERSION == "m6k-kilo-sys-v1"
+        assert adapter.PROMPT_VERSION == "m6o-kilo-sys-v1"
         assert adapter.ADAPTER_VERSION == "m6g-kilo-v1"
 
     def test_previous_prompts_preserved(self):

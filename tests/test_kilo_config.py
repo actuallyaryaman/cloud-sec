@@ -37,7 +37,7 @@ class TestTrackedDefault:
     def test_model_only_substitution(self):
         import cloudsec_agent.providers.kilo as kilo
         assert kilo.ADAPTER_VERSION == "m6g-kilo-v1"
-        assert kilo.PROMPT_VERSION == "m6k-kilo-sys-v1"
+        assert kilo.PROMPT_VERSION == "m6o-kilo-sys-v1"
         assert kilo.BASE_URL == "https://api.kilo.ai/api/gateway"
         assert len(kilo.build_function_tools()) == 10
 

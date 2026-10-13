@@ -311,7 +311,9 @@ class TestPromptPreservation:
             adapter.SYSTEM_INSTRUCTION_M6I_V1
         assert "Tool calls exist only to gather evidence" in \
             adapter.SYSTEM_INSTRUCTION_M6J_V1
-        assert adapter.PROMPT_VERSION == "m6k-kilo-sys-v1"
+        assert "Requests already flagged as" in \
+            adapter.SYSTEM_INSTRUCTION_M6K_V1
+        assert adapter.PROMPT_VERSION == "m6o-kilo-sys-v1"
 
     def test_new_policy_present(self):
         text = adapter.SYSTEM_INSTRUCTION
