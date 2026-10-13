@@ -25,6 +25,8 @@ class ModelContext:
     tool_calls_used: int = 0
     tool_calls_remaining: int = 0
     budget_warning: str = ""
+    warned_requests: tuple = ()
+    convergence_checkpoint: str = ""
 
     def __post_init__(self):
         if not isinstance(self.run_id, str) or not self.run_id:
@@ -41,6 +43,14 @@ class ModelContext:
                 raise ValueError(f"{name} must be a non-negative int")
         if not isinstance(self.budget_warning, str):
             raise TypeError("budget_warning must be a string")
+        object.__setattr__(self, "warned_requests",
+                            tuple(self.warned_requests or ()))
+        for item in self.warned_requests:
+            if not isinstance(item, str) or not item:
+                raise ValueError(
+                    "warned_requests must be non-empty strings")
+        if not isinstance(self.convergence_checkpoint, str):
+            raise TypeError("convergence_checkpoint must be a string")
 
 
 @dataclass(frozen=True)

@@ -2,6 +2,8 @@ __all__ = [
     "AgentOrchestrator",
     "REPEAT_WARNING",
     "LOW_BUDGET_WARNING",
+    "CONVERGENCE_CHECKPOINT",
+    "CONVERGENCE_TOOL_CALLS",
 ]
 
 import json
@@ -30,6 +32,30 @@ LOW_BUDGET_WARNING = (
     "the available evidence supports a grounded conclusion, produce the "
     "final answer now. Use another tool only if it is necessary to "
     "resolve a fact that could materially change the conclusion.")
+
+CONVERGENCE_TOOL_CALLS = 8
+
+CONVERGENCE_CHECKPOINT = (
+    "Convergence checkpoint: substantial investigation has already been "
+    "performed. Before requesting another tool, decide whether the "
+    "current grounded evidence is sufficient for the best supported "
+    "final answer. If it is sufficient, finalize now. Request another "
+    "tool only if a specific unresolved fact could materially change "
+    "the finding, confidence, or recommended action.")
+
+
+def _summarize_request(tool_id, arguments) -> str:
+    try:
+        items = sorted(dict(arguments or {}).items())
+    except (TypeError, ValueError, AttributeError):
+        items = []
+    parts = []
+    for name, value in items:
+        text = value if isinstance(value, str) else str(value)
+        if len(text) > 120:
+            text = text[:120] + "<truncated>"
+        parts.append(f"{name}={text}")
+    return f"{tool_id}({', '.join(parts)})"
 
 
 def _normalize_key(name) -> str:
@@ -129,6 +155,7 @@ class AgentOrchestrator:
         events = []
         observations = []
         repeat_counts = {}
+        warned_requests = []
         tool_call_count = 0
         model_turn_count = 0
 
@@ -176,6 +203,9 @@ class AgentOrchestrator:
             budget_warning = ""
             if turns_remaining <= 3 or calls_remaining <= 5:
                 budget_warning = LOW_BUDGET_WARNING
+            convergence_checkpoint = ""
+            if tool_call_count >= CONVERGENCE_TOOL_CALLS:
+                convergence_checkpoint = CONVERGENCE_CHECKPOINT
             try:
                 turn = self._model.complete(
                     ModelContext(run_id=run_id, turn_number=turn_number,
@@ -184,7 +214,10 @@ class AgentOrchestrator:
                                  turns_remaining=turns_remaining,
                                  tool_calls_used=tool_call_count,
                                  tool_calls_remaining=calls_remaining,
-                                 budget_warning=budget_warning))
+                                 budget_warning=budget_warning,
+                                 warned_requests=tuple(warned_requests),
+                                 convergence_checkpoint=
+                                 convergence_checkpoint))
             except ModelPortError as exc:
                 return stop(InvestigationStatus.INCOMPLETE,
                             f"model_stopped:{self._safe_code(exc)}")
@@ -243,6 +276,10 @@ class AgentOrchestrator:
                 repeat_warning = ""
                 if repeat_will_stop:
                     repeat_warning = REPEAT_WARNING
+                    summary = _summarize_request(call.tool_id,
+                                                 dict(call.arguments))
+                    if summary not in warned_requests:
+                        warned_requests.append(summary)
                 request_id = f"{run_id}:req:{tool_call_count:04d}"
                 justification = (call.justification or "")[
                     :limits.max_justification_chars]
