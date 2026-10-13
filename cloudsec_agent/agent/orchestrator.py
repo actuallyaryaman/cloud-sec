@@ -1,6 +1,7 @@
 __all__ = [
     "AgentOrchestrator",
     "REPEAT_WARNING",
+    "LOW_BUDGET_WARNING",
 ]
 
 import json
@@ -23,6 +24,12 @@ REPEAT_WARNING = (
     "Repeating the identical request again will terminate the "
     "investigation. Choose a different evidence-gathering action or "
     "provide your final answer.")
+
+LOW_BUDGET_WARNING = (
+    "Budget warning: the investigation budget is nearly exhausted. If "
+    "the available evidence supports a grounded conclusion, produce the "
+    "final answer now. Use another tool only if it is necessary to "
+    "resolve a fact that could materially change the conclusion.")
 
 
 def _normalize_key(name) -> str:
@@ -164,10 +171,20 @@ class AgentOrchestrator:
             model_turn_count += 1
             emit(AgentEventKind.MODEL_TURN_STARTED,
                  {"turn_number": turn_number})
+            turns_remaining = limits.max_turns - model_turn_count
+            calls_remaining = limits.max_tool_calls - tool_call_count
+            budget_warning = ""
+            if turns_remaining <= 3 or calls_remaining <= 5:
+                budget_warning = LOW_BUDGET_WARNING
             try:
                 turn = self._model.complete(
                     ModelContext(run_id=run_id, turn_number=turn_number,
-                                 observations=tuple(observations)))
+                                 observations=tuple(observations),
+                                 turns_used=model_turn_count - 1,
+                                 turns_remaining=turns_remaining,
+                                 tool_calls_used=tool_call_count,
+                                 tool_calls_remaining=calls_remaining,
+                                 budget_warning=budget_warning))
             except ModelPortError as exc:
                 return stop(InvestigationStatus.INCOMPLETE,
                             f"model_stopped:{self._safe_code(exc)}")

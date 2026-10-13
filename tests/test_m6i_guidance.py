@@ -124,7 +124,7 @@ class TestNewPrompt:
     PROMPT = adapter.SYSTEM_INSTRUCTION
 
     def test_version_bumped(self):
-        assert adapter.PROMPT_VERSION == "m6i-kilo-sys-v1"
+        assert adapter.PROMPT_VERSION == "m6j-kilo-sys-v1"
         assert adapter.ADAPTER_VERSION == "m6g-kilo-v1"
 
     def test_old_prompt_preserved(self):
@@ -133,8 +133,8 @@ class TestNewPrompt:
         assert "must use them before concluding" not in self.PROMPT
 
     def test_evidence_sufficiency(self):
-        assert "do not" in self.PROMPT.lower()
-        assert "exhaust every available function" in self.PROMPT
+        assert "Tool calls exist only to gather evidence" in self.PROMPT
+        assert "materially change the recommendation" in self.PROMPT
 
     def test_pivot_guidance(self):
         assert "change" in self.PROMPT.lower()
@@ -144,8 +144,9 @@ class TestNewPrompt:
         assert "identical request" in self.PROMPT
 
     def test_finalization_guidance(self):
-        assert "final answer once" in self.PROMPT.lower()
-        assert "preserve budget" in self.PROMPT.lower()
+        assert "prefer" in self.PROMPT.lower()
+        assert "final answer over further exploratory reads" in self.PROMPT
+        assert "reserve enough" in self.PROMPT.lower()
 
     def test_uncertainty_guidance(self):
         assert "confidence" in self.PROMPT

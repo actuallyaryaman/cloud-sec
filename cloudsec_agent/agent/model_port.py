@@ -20,6 +20,11 @@ class ModelContext:
     run_id: str
     turn_number: int
     observations: tuple = ()
+    turns_used: int = 0
+    turns_remaining: int = 0
+    tool_calls_used: int = 0
+    tool_calls_remaining: int = 0
+    budget_warning: str = ""
 
     def __post_init__(self):
         if not isinstance(self.run_id, str) or not self.run_id:
@@ -28,6 +33,14 @@ class ModelContext:
             raise ValueError("turn_number must be a positive int")
         object.__setattr__(self, "observations",
                             tuple(self.observations or ()))
+        for name in ("turns_used", "turns_remaining", "tool_calls_used",
+                     "tool_calls_remaining"):
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, int) or \
+                    value < 0:
+                raise ValueError(f"{name} must be a non-negative int")
+        if not isinstance(self.budget_warning, str):
+            raise TypeError("budget_warning must be a string")
 
 
 @dataclass(frozen=True)
