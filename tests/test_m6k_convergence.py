@@ -313,7 +313,10 @@ class TestPromptPreservation:
             adapter.SYSTEM_INSTRUCTION_M6J_V1
         assert "Requests already flagged as" in \
             adapter.SYSTEM_INSTRUCTION_M6K_V1
-        assert adapter.PROMPT_VERSION == "m6o-kilo-sys-v1"
+        assert "grounded only for the identifier type" in \
+            adapter.SYSTEM_INSTRUCTION_M6O_V1
+        assert "grounded in enough evidence" in adapter.SYSTEM_INSTRUCTION
+        assert adapter.PROMPT_VERSION == "m6p-kilo-sys-v1"
 
     def test_new_policy_present(self):
         text = adapter.SYSTEM_INSTRUCTION
