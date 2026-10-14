@@ -1,0 +1,219 @@
+{
+  "cases": [
+    {
+      "calibration": false,
+      "difficulty": "easy",
+      "family": "credential_compromise",
+      "malicious": true,
+      "scenario_id": "m7a-v1:credential_compromise:easy:seed-0041",
+      "seed": 41
+    },
+    {
+      "calibration": false,
+      "difficulty": "easy",
+      "family": "credential_compromise",
+      "malicious": true,
+      "scenario_id": "m7a-v1:credential_compromise:easy:seed-0043",
+      "seed": 43
+    },
+    {
+      "calibration": false,
+      "difficulty": "medium",
+      "family": "credential_compromise",
+      "malicious": true,
+      "scenario_id": "m7a-v1:credential_compromise:medium:seed-0045",
+      "seed": 45
+    },
+    {
+      "calibration": false,
+      "difficulty": "medium",
+      "family": "credential_compromise",
+      "malicious": true,
+      "scenario_id": "m7a-v1:credential_compromise:medium:seed-0047",
+      "seed": 47
+    },
+    {
+      "calibration": false,
+      "difficulty": "easy",
+      "family": "recon_heavy",
+      "malicious": true,
+      "scenario_id": "m7a-v1:recon_heavy:easy:seed-0049",
+      "seed": 49
+    },
+    {
+      "calibration": false,
+      "difficulty": "easy",
+      "family": "recon_heavy",
+      "malicious": true,
+      "scenario_id": "m7a-v1:recon_heavy:easy:seed-0051",
+      "seed": 51
+    },
+    {
+      "calibration": false,
+      "difficulty": "medium",
+      "family": "recon_heavy",
+      "malicious": true,
+      "scenario_id": "m7a-v1:recon_heavy:medium:seed-0053",
+      "seed": 53
+    },
+    {
+      "calibration": false,
+      "difficulty": "medium",
+      "family": "recon_heavy",
+      "malicious": true,
+      "scenario_id": "m7a-v1:recon_heavy:medium:seed-0055",
+      "seed": 55
+    },
+    {
+      "calibration": false,
+      "difficulty": "easy",
+      "family": "data_access_anomaly",
+      "malicious": true,
+      "scenario_id": "m7a-v1:data_access_anomaly:easy:seed-0057",
+      "seed": 57
+    },
+    {
+      "calibration": false,
+      "difficulty": "easy",
+      "family": "data_access_anomaly",
+      "malicious": true,
+      "scenario_id": "m7a-v1:data_access_anomaly:easy:seed-0059",
+      "seed": 59
+    },
+    {
+      "calibration": false,
+      "difficulty": "medium",
+      "family": "data_access_anomaly",
+      "malicious": true,
+      "scenario_id": "m7a-v1:data_access_anomaly:medium:seed-0061",
+      "seed": 61
+    },
+    {
+      "calibration": false,
+      "difficulty": "medium",
+      "family": "data_access_anomaly",
+      "malicious": true,
+      "scenario_id": "m7a-v1:data_access_anomaly:medium:seed-0063",
+      "seed": 63
+    },
+    {
+      "calibration": false,
+      "difficulty": "easy",
+      "family": "benign",
+      "malicious": false,
+      "scenario_id": "m7a-v1:benign:easy:seed-0065",
+      "seed": 65
+    },
+    {
+      "calibration": false,
+      "difficulty": "easy",
+      "family": "benign",
+      "malicious": false,
+      "scenario_id": "m7a-v1:benign:easy:seed-0067",
+      "seed": 67
+    },
+    {
+      "calibration": false,
+      "difficulty": "medium",
+      "family": "benign",
+      "malicious": false,
+      "scenario_id": "m7a-v1:benign:medium:seed-0069",
+      "seed": 69
+    },
+    {
+      "calibration": false,
+      "difficulty": "medium",
+      "family": "benign",
+      "malicious": false,
+      "scenario_id": "m7a-v1:benign:medium:seed-0071",
+      "seed": 71
+    },
+    {
+      "calibration": true,
+      "difficulty": "easy",
+      "family": "credential_compromise",
+      "malicious": true,
+      "scenario_id": "m7a-v1:credential_compromise:easy:seed-0001",
+      "seed": 1
+    },
+    {
+      "calibration": true,
+      "difficulty": "medium",
+      "family": "credential_compromise",
+      "malicious": true,
+      "scenario_id": "m7a-v1:credential_compromise:medium:seed-0003",
+      "seed": 3
+    },
+    {
+      "calibration": true,
+      "difficulty": "easy",
+      "family": "recon_heavy",
+      "malicious": true,
+      "scenario_id": "m7a-v1:recon_heavy:easy:seed-0011",
+      "seed": 11
+    },
+    {
+      "calibration": true,
+      "difficulty": "medium",
+      "family": "recon_heavy",
+      "malicious": true,
+      "scenario_id": "m7a-v1:recon_heavy:medium:seed-0013",
+      "seed": 13
+    },
+    {
+      "calibration": true,
+      "difficulty": "easy",
+      "family": "data_access_anomaly",
+      "malicious": true,
+      "scenario_id": "m7a-v1:data_access_anomaly:easy:seed-0021",
+      "seed": 21
+    },
+    {
+      "calibration": true,
+      "difficulty": "medium",
+      "family": "data_access_anomaly",
+      "malicious": true,
+      "scenario_id": "m7a-v1:data_access_anomaly:medium:seed-0023",
+      "seed": 23
+    },
+    {
+      "calibration": true,
+      "difficulty": "easy",
+      "family": "benign",
+      "malicious": false,
+      "scenario_id": "m7a-v1:benign:easy:seed-0031",
+      "seed": 31
+    },
+    {
+      "calibration": true,
+      "difficulty": "medium",
+      "family": "benign",
+      "malicious": false,
+      "scenario_id": "m7a-v1:benign:medium:seed-0033",
+      "seed": 33
+    }
+  ],
+  "config": {
+    "adapter_version": "m6g-kilo-v1",
+    "generator_version": "m7a-v1",
+    "max_output_tokens": 2048,
+    "model": "stealth/glyph-cluster",
+    "prompt_version": "m6p-kilo-sys-v1",
+    "provider": "kilo",
+    "retries": 0,
+    "temperature": 0.0
+  },
+  "generator_version": "m7a-v1",
+  "max_consecutive_interruptions": 3,
+  "max_interruption_rate": 0.2,
+  "min_attempts_for_rate": 10,
+  "min_evaluable": 2,
+  "repetitions": 3,
+  "scheduler": {
+    "name": "interleaved-coprime",
+    "step": 3,
+    "version": "m7d-sched-v1"
+  },
+  "scoring_version": "m7d-eval-v1",
+  "version": "m7d-v1"
+}
