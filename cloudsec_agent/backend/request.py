@@ -129,9 +129,27 @@ def _require_text(spec, arguments, name) -> str:
     return value
 
 
-def canonicalize_containment_update_access_key(arguments) -> CanonicalAction:
+def canonicalize_containment_update_access_key(arguments,
+                                                 containment_target=None
+                                                 ) -> CanonicalAction:
     from ..scenario.seed import incident_user_arn
 
+    if containment_target is None:
+        expected_user = CONTAINMENT_USER
+        expected_resource = incident_user_arn()
+    else:
+        try:
+            expected_user, expected_resource = containment_target
+        except (TypeError, ValueError):
+            raise ToolValidationError(UPDATE_ACCESS_KEY,
+                                      "invalid containment target", ())
+        if not isinstance(expected_user, str) or not expected_user:
+            raise ToolValidationError(UPDATE_ACCESS_KEY,
+                                      "invalid containment target", ())
+        if not isinstance(expected_resource, str) or \
+                not expected_resource:
+            raise ToolValidationError(UPDATE_ACCESS_KEY,
+                                      "invalid containment target", ())
     spec = get_tool(UPDATE_ACCESS_KEY)
     supplied = validate_arguments(spec, arguments)
     user_name = _require_text(spec, supplied, "UserName")
@@ -145,12 +163,13 @@ def canonicalize_containment_update_access_key(arguments) -> CanonicalAction:
         raise ToolValidationError(
             spec.tool_id,
             f"status must be {CANONICAL_STATUS_INACTIVE}", ("Status",))
-    if user_name != CONTAINMENT_USER:
+    if user_name != expected_user:
         raise ToolValidationError(
-            spec.tool_id, f"user must be {CONTAINMENT_USER}", ("UserName",))
+            spec.tool_id, "user is not the authorized containment target",
+            ("UserName",))
     return CanonicalAction(
         tool_id=spec.tool_id, service_action=spec.service_action,
-        resource=incident_user_arn(),
+        resource=expected_resource,
         normalized_arguments={"AccessKeyId": access_key_id,
                               "Status": CANONICAL_STATUS_INACTIVE,
                               "UserName": user_name})

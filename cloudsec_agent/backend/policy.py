@@ -78,7 +78,9 @@ def evaluate_containment_policy(action, digest, broker_decision,
         return _deny(PolicyReasonCode.WRONG_TOOL, digest)
     if action.service_action != _CONTAINMENT_SERVICE_ACTION:
         return _deny(PolicyReasonCode.WRONG_SERVICE_ACTION, digest)
-    if action.resource != incident_user_arn():
+    expected_resource = incident_user_arn().rsplit("/", 1)[0] + \
+        f"/{context.incident_user}"
+    if action.resource != expected_resource:
         return _deny(PolicyReasonCode.WRONG_RESOURCE, digest)
     arguments = action.normalized_arguments
     if not isinstance(arguments, dict) and \

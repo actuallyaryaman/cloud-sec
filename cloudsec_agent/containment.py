@@ -15,7 +15,8 @@ from .backend.executor import (ContainmentClassification, ContainmentExecutor,
 from .backend.policy import evaluate_containment_policy
 from .backend.registry import (CONTAINMENT_CANONICALIZER, SECRET_READ_CANONICALIZER,
                        get_tool)
-from .backend.request import (ToolRequest, ToolValidationError, action_digest,
+from .backend.request import (CONTAINMENT_USER, ToolRequest,
+                      ToolValidationError, action_digest,
                       canonicalize_containment_update_access_key,
                       canonicalize_secret_read, validate_arguments)
 
@@ -107,6 +108,13 @@ def _canonicalize(request, context):
         spec = get_tool(request.tool_id)
         validate_arguments(spec, request.arguments)
         if spec.canonicalizer_id == CONTAINMENT_CANONICALIZER:
+            incident = getattr(context, "incident_user", "")
+            if isinstance(incident, str) and incident and \
+                    incident != CONTAINMENT_USER:
+                from .scenario.seed import incident_user_arn
+                root = incident_user_arn().rsplit("/", 1)[0]
+                return spec, canonicalize_containment_update_access_key(
+                    request.arguments, (incident, f"{root}/{incident}"))
             return spec, canonicalize_containment_update_access_key(
                 request.arguments)
         if spec.canonicalizer_id == SECRET_READ_CANONICALIZER:

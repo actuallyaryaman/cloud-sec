@@ -407,6 +407,18 @@ class TestScenarioPolicyContext:
             resource="arn:aws:iam::000000000000:user/other-user",
             normalized_arguments=_valid_arguments(UserName="other-user"))
         _, policy = _decide_permissive(action, context=context)
+        assert policy.allowed is True
+        assert policy.reason_code is pl.PolicyReasonCode.ALLOW_CONTAINMENT
+
+    def test_policy_still_rejects_mismatched_resource(self):
+        context = pl.ScenarioPolicyContext(
+            scenario_id="csi-incident-v1", incident_user="other-user",
+            compromised_access_key_id=COMPROMISED_KEY)
+        action = _action_with(
+            resource="arn:aws:iam::000000000000:user/incident-user",
+            normalized_arguments=_valid_arguments(UserName="other-user"))
+        _, policy = _decide_permissive(action, context=context)
+        assert policy.allowed is False
         assert policy.reason_code is pl.PolicyReasonCode.WRONG_RESOURCE
 
     def test_incident_arn_comes_from_frozen_m1_helper(self):

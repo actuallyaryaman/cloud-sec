@@ -119,7 +119,7 @@ class ContainmentBridge:
         return event
 
     def prepare(self, action_call_id, proposal, discovered_principal,
-                discovered_key):
+                discovered_key, containment_scope=None):
         if not isinstance(action_call_id, str) or not action_call_id:
             raise ContainmentBridgeError("invalid_call_id")
         if action_call_id in self._used_call_ids:
@@ -132,8 +132,19 @@ class ContainmentBridge:
         if arguments.get("UserName") != discovered_principal or \
                 arguments.get("AccessKeyId") != discovered_key:
             raise ContainmentBridgeError("discovery_mismatch")
+        if containment_scope is None:
+            target = None
+        else:
+            if not containment_scope.has_target:
+                raise ContainmentBridgeError("no_authorized_target")
+            if arguments.get("UserName") != \
+                    containment_scope.allowed_user_name:
+                raise ContainmentBridgeError("discovery_mismatch")
+            target = (containment_scope.allowed_user_name,
+                      containment_scope.allowed_user_arn)
         try:
-            action = canonicalize_containment_update_access_key(arguments)
+            action = canonicalize_containment_update_access_key(
+                arguments, target)
         except (ValueError, TypeError):
             raise ContainmentBridgeError("invalid_arguments")
         self._used_call_ids.add(action_call_id)
