@@ -117,7 +117,9 @@ def spec_to_dict(spec) -> dict:
             "temperature": spec.config.temperature,
             "max_output_tokens": spec.config.max_output_tokens,
             "retries": spec.config.retries,
-            "generator_version": spec.config.generator_version},
+            "generator_version": spec.config.generator_version,
+            "routing_mode": spec.config.routing_mode,
+            "models": list(spec.config.models)},
         "cases": [{
             "family": c.family, "difficulty": c.difficulty, "seed": c.seed,
             "scenario_id": c.scenario_id, "malicious": c.malicious,
@@ -150,7 +152,9 @@ def spec_from_dict(payload) -> BenchmarkSpec:
             temperature=float(config["temperature"]),
             max_output_tokens=int(config["max_output_tokens"]),
             retries=int(config["retries"]),
-            generator_version=config["generator_version"]),
+            generator_version=config["generator_version"],
+            routing_mode=str(config.get("routing_mode", "pinned")),
+            models=tuple(config.get("models", ()))),
         max_consecutive_interruptions=int(payload.get(
             "max_consecutive_interruptions", 3)),
         min_attempts_for_rate=int(payload.get("min_attempts_for_rate", 10)),

@@ -1,0 +1,18 @@
+# Synthetic research data only. Free/trial model endpoints may use
+# submitted content to improve their products. Never send personal data,
+# production secrets, real credentials, or customer data. The bundled
+# scenario fixtures are synthetic and safe for such endpoints.
+# The API key itself is NEVER stored here; set OPENROUTER_API_KEY locally.
+[openrouter]
+provider = "openrouter"
+routing_mode = "resilient"
+models = [
+  "nvidia/nemotron-3.5-lightning:free",
+  "nvidia/nemotron-3-super-120b-a12b:free",
+  "nvidia/nemotron-3-ultra-550b-a55b:free",
+]
+api_key_env = "OPENROUTER_API_KEY"
+temperature = 0.0
+max_output_tokens = 2048
+adapter_version = "m6g-openrouter-v1"
+prompt_version = "m6p-kilo-sys-v1"

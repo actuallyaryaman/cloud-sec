@@ -125,6 +125,8 @@ class ExperimentConfig:
     max_output_tokens: int
     retries: int
     generator_version: str
+    routing_mode: str = "pinned"
+    models: tuple = ()
 
     def identity(self) -> str:
         return _digest({
@@ -134,7 +136,9 @@ class ExperimentConfig:
             "temperature": self.temperature,
             "max_output_tokens": self.max_output_tokens,
             "retries": self.retries,
-            "generator_version": self.generator_version})
+            "generator_version": self.generator_version,
+            "routing_mode": self.routing_mode,
+            "models": list(self.models)})
 
 
 @dataclass(frozen=True)

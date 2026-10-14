@@ -10,18 +10,21 @@ from pathlib import Path
 DEFAULT_MODEL = "gemini-3.8-flash"
 CONFIG_RELATIVE = Path("config") / "model.toml"
 ENV_LOCAL_NAME = ".env.local"
-PROVIDERS = ("google", "kilo")
+PROVIDERS = ("google", "kilo", "openrouter")
 PROVIDER_DEFAULTS = {
     "google": "gemini-3.8-flash",
     "kilo": "stealth/glyph-cluster",
+    "openrouter": "nvidia/nemotron-3.5-lightning:free",
 }
 PROVIDER_KEYS = {
     "google": "GEMINI_API_KEY",
     "kilo": "KILO_API_KEY",
+    "openrouter": "OPENROUTER_API_KEY",
 }
 PROVIDER_NAMES = {
     "google": "Gemini",
     "kilo": "Kilo",
+    "openrouter": "OpenRouter",
 }
 
 MODEL_FIELDS = ("provider", "model", "temperature", "max_output_tokens",
