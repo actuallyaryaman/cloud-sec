@@ -8,7 +8,8 @@ __all__ = [
 from ..agent.tool_port import (BackendToolRequest, ToolPort, ToolResult)
 from ..backend.audit import (AuditLog, AuditRecord, AuditStage, StageState,
                              audit_resource_ref)
-from ..backend.broker import (TASK_SCOPED_CAPABILITY, evaluate, grant_for)
+from ..backend.broker import (TASK_SCOPED_CAPABILITY, CapabilitySet,
+                               evaluate, grant_for)
 from ..backend.registry import Category, ToolNotFoundError, get_tool
 from ..backend.request import (CanonicalAction, ToolRequest, action_digest,
                                canonicalize_secret_read, validate_arguments)
@@ -114,7 +115,7 @@ def _final_bounds(data):
 
 class RealBackendToolPort(ToolPort):
     def __init__(self, read_port, *, run_scope, audit_log=None,
-                 actor="agent", scenario_id="local"):
+                 actor="agent", scenario_id="local", capability=None):
         if not isinstance(read_port, BackendReadPort):
             raise TypeError("read_port must be a BackendReadPort")
         if not isinstance(run_scope, str) or not run_scope:
@@ -123,6 +124,11 @@ class RealBackendToolPort(ToolPort):
             raise ValueError("actor must be a non-empty string")
         if not isinstance(scenario_id, str) or not scenario_id:
             raise ValueError("scenario_id must be a non-empty string")
+        if capability is None:
+            capability = TASK_SCOPED_CAPABILITY
+        if not isinstance(capability, CapabilitySet):
+            raise TypeError("capability must be a CapabilitySet")
+        self._capability = capability
         self._reads = read_port
         self._run_scope = run_scope
         self._actor = actor
@@ -179,7 +185,7 @@ class RealBackendToolPort(ToolPort):
         return action, action_digest(action)
 
     def _broker(self, action):
-        grant = grant_for(TASK_SCOPED_CAPABILITY, self._run_scope)
+        grant = grant_for(self._capability, self._run_scope)
         return grant, evaluate(grant, action, self._run_scope)
 
     def _sensitive(self, request, spec, validated):
