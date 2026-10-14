@@ -6,7 +6,8 @@ import pytest
 
 from cloudsec_agent.scenario.generator import (
     GENERATOR_VERSION, generate_scenario)
-from cloudsec_agent.scenario.generator.seeding import seed_generated
+from cloudsec_agent.scenario.generator.seeding import (
+    generated_investigator_policy, seed_generated)
 from cloudsec_agent.scenario.generator.verifier import verify_generated
 
 
@@ -207,6 +208,31 @@ class TestSeeder:
                      for call in service.calls]
         assert "update_access_key" not in str(mutations).lower()
         assert verify_generated(floci, spec).ok
+
+
+class TestGeneratedInvestigatorPolicy:
+    def test_merged_doc_covers_generated_resources(self):
+        import json
+        doc = json.loads(generated_investigator_policy(
+            "m7a-case-abc123", "m7a-secret-xyz"))
+        blob = json.dumps(doc)
+        assert "m7a-case-abc123" in blob
+        assert "secret:m7a-secret-xyz" in blob
+        assert "csi-incident-bucket" in blob
+
+    def test_m1_base_document_unchanged(self):
+        from cloudsec_agent.scenario.seed import (
+            investigator_policy_document)
+        assert "m7a-case" not in investigator_policy_document()
+
+    def test_seeded_policy_readable(self):
+        spec, floci, _ = _seeded()
+        stored = floci.client("iam").get_user_policy(
+            UserName=spec.investigator_user,
+            PolicyName="m7a-investigator-readonly")
+        blob = json.dumps(stored["PolicyDocument"])
+        assert spec.bucket in blob
+        assert spec.secret_name in blob
 
 
 class TestVerifier:

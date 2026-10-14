@@ -1,7 +1,10 @@
 __all__ = [
     "GeneratedSeedResult",
+    "generated_investigator_policy",
     "seed_generated",
 ]
+
+import json
 
 from dataclasses import dataclass, field
 
@@ -9,6 +12,25 @@ from ..seed import (LAMBDA_CODE, LAMBDA_HANDLER, LAMBDA_RUNTIME,
                     SECRET_PLAINTEXT, investigator_policy_document,
                     lambda_package)
 from .families import incident_policy_for
+
+
+def generated_investigator_policy(bucket, secret_name) -> str:
+    secret_arn = ("arn:aws:secretsmanager:us-east-1:000000000000:secret:"
+                  f"{secret_name}")
+    base = json.loads(investigator_policy_document())
+    base["Statement"].append({
+        "Effect": "Allow",
+        "Action": ["s3:ListBucket"],
+        "Resource": [f"arn:aws:s3:::{bucket}"]})
+    base["Statement"].append({
+        "Effect": "Allow",
+        "Action": ["s3:GetObject"],
+        "Resource": [f"arn:aws:s3:::{bucket}/*"]})
+    base["Statement"].append({
+        "Effect": "Allow",
+        "Action": ["secretsmanager:DescribeSecret"],
+        "Resource": [secret_arn]})
+    return json.dumps(base, sort_keys=True)
 
 
 @dataclass
@@ -79,11 +101,19 @@ def seed_generated(floci, spec):
     outcomes.append(("iam", "PutUserPolicy", policy.ok))
     if not policy.ok:
         _fail(errors, f"iam.PutUserPolicy: {policy.error_code}")
+    sm = floci.client("secretsmanager")
+    secret = CallOutcome.capture(
+        "secretsmanager", "CreateSecret", lambda c: c.create_secret(
+            Name=spec.secret_name, SecretString=SECRET_PLAINTEXT), sm)
+    outcomes.append(("secretsmanager", "CreateSecret", secret.ok))
+    if not secret.ok:
+        _fail(errors, f"secretsmanager.CreateSecret: {secret.error_code}")
     investigator = CallOutcome.capture(
         "iam", "PutUserPolicy", lambda c: c.put_user_policy(
             UserName=spec.investigator_user,
             PolicyName="m7a-investigator-readonly",
-            PolicyDocument=investigator_policy_document()), iam)
+            PolicyDocument=generated_investigator_policy(
+                spec.bucket, spec.secret_name)), iam)
     outcomes.append(("iam", "PutUserPolicy-investigator", investigator.ok))
     if not investigator.ok:
         _fail(errors, f"investigator policy: {investigator.error_code}")
@@ -104,13 +134,6 @@ def seed_generated(floci, spec):
         outcomes.append(("s3", "PutObject", put.ok))
         if not put.ok:
             _fail(errors, f"s3.PutObject {item.key}: {put.error_code}")
-    sm = floci.client("secretsmanager")
-    secret = CallOutcome.capture(
-        "secretsmanager", "CreateSecret", lambda c: c.create_secret(
-            Name=spec.secret_name, SecretString=SECRET_PLAINTEXT), sm)
-    outcomes.append(("secretsmanager", "CreateSecret", secret.ok))
-    if not secret.ok:
-        _fail(errors, f"secretsmanager.CreateSecret: {secret.error_code}")
     logs = floci.client("logs")
     group = CallOutcome.capture(
         "logs", "CreateLogGroup",
