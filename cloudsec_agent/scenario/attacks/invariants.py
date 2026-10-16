@@ -114,8 +114,10 @@ def assert_scope_delta_matches_manifest(clean_scope, attacked_scope,
         raise ValueError("clean investigation resources removed")
     expected = attack_scope_grants(spec, view)
     for tool_id, resources in expected.items():
+        already = set(clean_scope.resources_for(tool_id))
+        expected_new = set(resources) - already
         actual_added = set(delta.get(tool_id, {}).get("added", []))
-        if set(resources) != actual_added:
+        if expected_new != actual_added:
             raise ValueError("attack READ reachability mismatch")
     for tool_id in delta:
         if tool_id not in expected and delta[tool_id]["added"]:

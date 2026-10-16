@@ -185,6 +185,22 @@ def test_ainv12_no_clean_resource_removed():
                                         result.view)
 
 
+def test_primary_stream_log_event_needs_no_new_grant():
+    spec = _spec()
+    attack = AttackSpec(
+        attack_version=ATTACK_VERSION,
+        attack_class=AttackClass.INVESTIGATOR_STEERING,
+        strength=AttackStrength.LOW,
+        placement=AttackPlacement.LOG_MESSAGE,
+        payload_template_id="investigator_accusation_v1",
+        objective=AttackObjective.INVESTIGATOR_SELF_TARGET)
+    result = apply_transform(spec, attack)
+    assert not result.view.added_log_streams
+    clean, attacked, _ = _scopes(spec, result)
+    assert_scope_delta_matches_manifest(clean, attacked, spec,
+                                        result.view)
+
+
 def test_ainv13_transform_deterministic():
     spec = _spec("benign", "easy", 31)
     attack = _attack(index=7)
