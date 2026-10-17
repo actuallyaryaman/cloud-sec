@@ -11,6 +11,7 @@ __all__ = [
     "ROUTING_IDENTITY",
     "FROZEN_PRIMARY",
     "FROZEN_FALLBACKS",
+    "PROVIDER_EVIDENCE_SCHEMA",
     "OpenRouterProviderError",
     "OpenRouterModelPort",
     "resolve_openrouter_models",
@@ -36,6 +37,7 @@ from .model_config import load_key
 
 ADAPTER_VERSION = "m6g-openrouter-v1"
 PROMPT_VERSION = "m6p-kilo-sys-v1"
+PROVIDER_EVIDENCE_SCHEMA = "m8d-provider-evidence-v1"
 
 PRIMARY_MODEL = "nvidia/nemotron-3.5-lightning:free"
 MODEL_ENV_VAR = "CLOUDSEC_OPENROUTER_MODEL"
@@ -214,8 +216,10 @@ class OpenRouterModelPort(ModelPort):
             raise TypeError("case_briefing must be a string")
         self._briefing = case_briefing
         self._last_usage = {}
+        self._last_usage_present = False
         self._last_served = {}
         self._last_request = {}
+        self._last_provider_response = None
 
     @property
     def models(self) -> tuple:
@@ -246,6 +250,11 @@ class OpenRouterModelPort(ModelPort):
         return dict(self._last_request)
 
     @property
+    def last_provider_response(self):
+        value = self._last_provider_response
+        return dict(value) if value is not None else None
+
+    @property
     def application_retry_count(self) -> int:
         return APPLICATION_RETRIES
 
@@ -273,6 +282,7 @@ class OpenRouterModelPort(ModelPort):
         if not isinstance(context, ModelContext):
             raise OpenRouterProviderError("invalid_response")
         investigation = build_investigation_text(context, self._briefing)
+        self._last_provider_response = None
         try:
             client = self._client_or_create()
             response = self._generate(client, investigation)
@@ -281,8 +291,11 @@ class OpenRouterModelPort(ModelPort):
         except Exception as exc:
             info = describe_openrouter_exception(exc)
             raise OpenRouterProviderError(info.classification, info)
+        # Preserve provider accounting independently of whether the local
+        # parser/schema handling below succeeds.
         self._record_usage(response)
         self._record_served(response)
+        self._last_provider_response = self._provider_evidence()
         if self._sdk_retries == 0 and self._mode == PINNED_MODEL and \
                 self._last_served["served_model"] != self.primary_model:
             raise OpenRouterProviderError("routing_violation")
@@ -323,6 +336,7 @@ class OpenRouterModelPort(ModelPort):
 
     def _record_usage(self, response):
         usage = getattr(response, "usage", None)
+        self._last_usage_present = usage is not None
         if usage is None:
             self._last_usage = {}
             return
@@ -354,6 +368,23 @@ class OpenRouterModelPort(ModelPort):
 
     def served_summary(self) -> dict:
         return dict(self._last_served)
+
+    def _provider_evidence(self) -> dict:
+        served = self._last_served
+        usage = dict(self._last_usage)
+        return {
+            "schema": PROVIDER_EVIDENCE_SCHEMA,
+            "provider_status": "COMPLETED",
+            "requested_primary": served.get("requested_primary"),
+            "configured_models": list(served.get("configured_models") or ()),
+            "routing_mode": self._mode,
+            "served_model": served.get("served_model"),
+            "provider": served.get("provider"),
+            "fallback_used": served.get("fallback_used"),
+            "application_retry_count": APPLICATION_RETRIES,
+            "usage": usage,
+            "usage_known": bool(self._last_usage_present),
+        }
 
     def _to_turn(self, context, response) -> ModelTurn:
         try:

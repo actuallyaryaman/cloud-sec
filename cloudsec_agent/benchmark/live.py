@@ -18,7 +18,7 @@ from ..scenario.attacks.invariants import attack_scope_grants
 from ..scenario.attacks.transform import apply_transform, seed_attacked_view
 from ..scenario.generator.seeding import SECRET_PLAINTEXT, seed_generated
 from ..scenario.generator.verifier import verify_generated
-from .analysis import METRICS, STOPS
+from .analysis import METRICS, STOPS, routing_integrity
 from .artifacts import atomic_json
 from .control import _score_and_control
 from .m8d import REPO, SCHEMA, attack_for, digest, load_spec, scenario_for, structural_preflight
@@ -40,6 +40,28 @@ def key_snapshot(floci):
     return {user['UserName']: {key['AccessKeyId']: key['Status'] for key in
             iam.list_access_keys(UserName=user['UserName']).get('AccessKeyMetadata', [])}
             for user in iam.list_users().get('Users', [])}
+
+
+def provider_response_evidence(model, turn_number, contract_error):
+    response = model.last_provider_response
+    if response is None:
+        return {'turn': turn_number, 'provider_status': 'NO_RESPONSE',
+                'parser_status': 'NOT_APPLICABLE',
+                'contract_error': contract_error,
+                'requested_primary': model.primary_model,
+                'configured_models': list(model.models),
+                'served_model': None, 'provider': None, 'fallback_used': None,
+                'usage': None, 'usage_known': False}
+    return {'turn': turn_number, 'provider_status': response['provider_status'],
+            'parser_status': 'ACCEPTED' if contract_error is None else 'REJECTED',
+            'contract_error': contract_error,
+            'requested_primary': response['requested_primary'],
+            'configured_models': response['configured_models'],
+            'served_model': response['served_model'],
+            'provider': response['provider'],
+            'fallback_used': response['fallback_used'],
+            'usage': dict(response['usage']),
+            'usage_known': response['usage_known']}
 
 
 def mutation_stops(before, after, scenario, action):
@@ -99,7 +121,7 @@ class LiveCase:
         transform = apply_transform(scenario, attack_for(base)) if row['condition'] == 'ATTACKED' else None
         metrics = {k: False for k in METRICS}
         critical = {k: False for k in STOPS}
-        evidence = {'events': [], 'turns': [], 'calls': []}
+        evidence = {'events': [], 'turns': [], 'calls': [], 'responses': []}
         result = {'schema': SCHEMA, 'status': 'COMPLETED', 'metrics': metrics,
                   'critical': critical, 'evidence': evidence}
         trace = self.store.root / 'traces' / (row['run_key'] + '.json')
@@ -206,6 +228,11 @@ class LiveCase:
                         persist()
                         raise
 
+                def record_response(self, context, contract_error):
+                    evidence['responses'].append(
+                        provider_response_evidence(model, context.turn_number,
+                                                   contract_error))
+
                 def _complete(self, context):
                     try:
                         artifact_store.validate(spec)
@@ -231,8 +258,10 @@ class LiveCase:
                     except (OpenRouterProviderError, KiloProviderError) as exc:
                         provider_error.append(exc.code)
                         critical['wrong_model'] = exc.code == 'routing_violation'
+                        self.record_response(context, exc.code)
                         persist()
                         raise
+                    self.record_response(context, None)
                     evidence['turns'].append({'turn': context.turn_number,
                         'observations': [{'tool_id': o.tool_id, 'ok': o.ok, 'data': dict(o.data)} for o in context.observations],
                         'tool_calls': [{'tool_id': c.tool_id, 'arguments': dict(c.arguments)} for c in turn.tool_calls],
@@ -245,6 +274,8 @@ class LiveCase:
                                                  scenario_id='test-scenario').run(row['run_key'])
             evidence['investigation_status'] = investigation.status.value
             evidence['stop_reason'] = investigation.stop_reason
+            if not routing_integrity(evidence, spec['treatment']['models'][0]):
+                critical['wrong_model'] = True
             interruption_codes = {'rate_limited', 'quota_exhausted', 'timeout', 'service_unavailable',
                                   'provider_error', 'auth_error', 'permission_denied', 'routing_violation',
                                   'model_unavailable', 'bad_request'}
