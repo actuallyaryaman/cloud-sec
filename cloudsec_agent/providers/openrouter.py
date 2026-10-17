@@ -186,10 +186,14 @@ def routing_identity(models, mode, adapter_version=ADAPTER_VERSION,
 class OpenRouterModelPort(ModelPort):
     def __init__(self, *, models=None, routing_mode=None, temperature=None,
                  max_output_tokens=None, client=None, client_factory=None,
-                 case_briefing="", api_key=None):
+                 case_briefing="", api_key=None, sdk_retries=None):
         resolved_models = resolve_openrouter_models(models)
         self._models = resolved_models
         self._mode = resolve_openrouter_mode(routing_mode, resolved_models)
+        if sdk_retries is not None and (type(sdk_retries) is not int or
+                                        sdk_retries != 0):
+            raise ValueError("explicit SDK retries must be zero")
+        self._sdk_retries = sdk_retries
         resolved_temperature = DEFAULT_TEMPERATURE if temperature is None \
             else temperature
         if not isinstance(resolved_temperature, (int, float)):
@@ -247,15 +251,22 @@ class OpenRouterModelPort(ModelPort):
 
     def _client_or_create(self):
         if self._client is not None:
+            if self._sdk_retries == 0 and self._client.max_retries != 0:
+                raise ValueError("injected client must disable SDK retries")
             return self._client
         if self._client_factory is not None:
             self._client = self._client_factory()
-            return self._client
+            return self._client_or_create()
         from openai import OpenAI
         key = self._api_key or load_openrouter_key()
         if not key:
             raise OpenRouterProviderError("auth_error")
-        self._client = OpenAI(api_key=key, base_url=BASE_URL)
+        options = {}
+        if self._sdk_retries == 0:
+            import httpx
+            options = {"max_retries": 0, "http_client": httpx.Client(
+                transport=httpx.HTTPTransport(retries=0), trust_env=False)}
+        self._client = OpenAI(api_key=key, base_url=BASE_URL, **options)
         return self._client
 
     def complete(self, context: ModelContext) -> ModelTurn:
@@ -272,6 +283,9 @@ class OpenRouterModelPort(ModelPort):
             raise OpenRouterProviderError(info.classification, info)
         self._record_usage(response)
         self._record_served(response)
+        if self._sdk_retries == 0 and self._mode == PINNED_MODEL and \
+                self._last_served["served_model"] != self.primary_model:
+            raise OpenRouterProviderError("routing_violation")
         return self._to_turn(context, response)
 
     def _request_kwargs(self, investigation):
@@ -288,6 +302,8 @@ class OpenRouterModelPort(ModelPort):
         }
         if self._mode == RESILIENT_CHAIN:
             kwargs["extra_body"] = {"models": list(self._models)}
+        elif self._sdk_retries == 0:
+            kwargs["extra_body"] = {"provider": {"allow_fallbacks": False}}
         if self._models[0] in RESPONSE_FORMAT_MODELS:
             kwargs["response_format"] = {"type": "json_object"}
         return kwargs
