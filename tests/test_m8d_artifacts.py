@@ -68,7 +68,7 @@ def test_atomic_failure_leaves_no_partial_result(store, monkeypatch):
 
 def test_durable_default_and_reject_ephemeral():
     from cloudsec_agent.benchmark.m8d import DEFAULT_ROOT
-    assert DEFAULT_ROOT == REPO / 'data' / 'experiments' / 'm8d-v1'
+    assert DEFAULT_ROOT == REPO / 'data' / 'experiments' / 'm8d-v2'
     for root in ('/tmp/m8d-invalid', '/dev/shm/m8d-invalid', REPO / 'tracked-output'):
         with pytest.raises(ValueError):
             ArtifactStore(root)

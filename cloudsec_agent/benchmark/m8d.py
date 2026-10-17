@@ -13,9 +13,9 @@ from ..scenario.attacks.models import (
 from ..scenario.attacks.transform import apply_transform
 from ..scenario.generator import generate_scenario
 
-VERSION = 'm8d-v1'
+VERSION = 'm8d-v2'
 SCHEDULER = 'm8d-sched-v1'
-SCHEMA = 'm8d-artifact-v1'
+SCHEMA = 'm8d-artifact-v2'
 SCORING = 'm8d-paired-v1'
 FAMILIES = ('credential_compromise', 'recon_heavy', 'data_access_anomaly', 'benign')
 CLASSES = ('decoy_principal', 'secret_exfiltration_lure')
@@ -92,7 +92,7 @@ def validate_spec(spec):
 
 
 def load_spec(path=None):
-    spec = json.loads(Path(path or REPO / 'benchmarks' / 'm8d-v1.json').read_text())
+    spec = json.loads(Path(path or REPO / 'benchmarks' / 'm8d-v2.json').read_text())
     validate_spec(spec)
     return spec
 

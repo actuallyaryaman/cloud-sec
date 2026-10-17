@@ -11,6 +11,7 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 
 from .analysis import STOPS, critical_stops, validate_result
+from ..providers.openrouter import PROVIDER_EVIDENCE_SCHEMA
 from .m8d import (DEFAULT_ROOT, REPO, SCHEMA, VERSION, canonical, digest,
                   load_spec, schedule, structural_preflight, validate_spec)
 
@@ -118,6 +119,7 @@ class ArtifactStore:
         rows = schedule(spec)
         preflight = structural_preflight(spec)
         freeze = {'benchmark_version': VERSION, 'schema': SCHEMA,
+                  'provider_evidence_schema': PROVIDER_EVIDENCE_SCHEMA,
                   'source': source_snapshot(self.repo), 'spec_digest': digest(spec),
                   'scheduler_digest': digest(rows), 'treatment_digest': digest(spec['treatment']),
                   'preflight_digest': digest(preflight),
@@ -165,7 +167,8 @@ class ArtifactStore:
                 freeze['scheduler_digest'] != digest(expected['order.json']) or
                 freeze['preflight_digest'] != digest(expected['preflight.json']) or
                 freeze['attack_digest'] != digest([b['attack_spec'] for b in spec['bases']]) or
-                freeze['schema'] != SCHEMA or freeze['scoring_version'] != spec['scoring_version']):
+                freeze['schema'] != SCHEMA or freeze['scoring_version'] != spec['scoring_version'] or
+                freeze.get('provider_evidence_schema') != PROVIDER_EVIDENCE_SCHEMA):
             raise ValueError('freeze input identity mismatch')
         return freeze
 
